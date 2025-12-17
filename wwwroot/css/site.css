@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: white;
+    padding: 20px;
+    border-right: 1px solid #dce3ec;
+}
+
+.sidebar h2 {
+    color: #0d6efd;
+    margin-bottom: 20px;
+}
+
+nav a {
+    display: block;
+    padding: 12px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+nav a i {
+    margin-right: 10px;
+}
+
+nav a:hover {
+    background: #e7f1ff;
+    color: #0d6efd;
+}
+
+/* Calendar */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.day {
+    background: #e7f1ff;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.day:hover {
+    background: #d0e4ff;
+}
+
+/* Icons */
+.option-icon {
+    max-width: 20px;
+    max-height: 20px;
+}
+

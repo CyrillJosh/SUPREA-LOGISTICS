@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+
+<!-- Logistics Page -->
+<h2 id="logistics" style="margin-top: 40px" class="text-primary">Logistics</h2>
+<table class="table">
+    <tr>
+        <th>Material</th>
+        <th>Quantity</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>Cement</td>
+        <td>500 Bags</td>
+        <td><span class="badge confirmed">Delivered</span></td>
+    </tr>
+    <tr>
+        <td>Steel Bars</td>
+        <td>200 pcs</td>
+        <td><span class="badge scheduled">In Transit</span></td>
+    </tr>
+</table>
+
+<!-- Scheduling Page -->
+<h2 id="scheduling" style="margin-top: 40px" class="text-primary">Scheduling</h2>
+<div class="calendar">
+    <div class="day">Mon<br />10</div>
+    <div class="day">Tue<br />11</div>
+    <div class="day">Wed<br />12</div>
+    <div class="day">Thu<br />13</div>
+    <div class="day">Fri<br />14</div>
+    <div class="day">Sat<br />15</div>
+    <div class="day">Sun<br />16</div>
+</div>
+
+<!-- Vehicle Page -->
+<h2 id="vehicles" style="margin-top: 40px" class="text-primary">Vehicle Management</h2>
+<table class="table">
+    <tr>
+        <th>Truck</th>
+        <th>Driver</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>L300</td>
+        <td>Jonathan Juarez</td>
+        <td><span class="badge confirmed">Available</span></td>
+    </tr>
+    <tr>
+        <td>Boom Truck</td>
+        <td>Micahel Tuico</td>
+        <td><span class="badge pending">On Delivery</span></td>
+    </tr>
+</table>
+
+<!-- Material Request Form -->
+<h2 style="margin-top: 40px" class="text-primary">Material Request</h2>
+<div class="p-4 bg-light rounded shadow-sm">
+
+    <div class="mb-3">
+        <label for="materialName" class="form-label">Material Name</label>
+        <input type="text" id="materialName" class="form-control" placeholder="Enter material name">
+    </div>
+
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" id="quantity" class="form-control" placeholder="Enter quantity">
+    </div>
+
+    <button class="btn btn-primary w-100">Submit Request</button>
+</div>

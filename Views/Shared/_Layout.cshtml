@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SUPREA_LOGISTICS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SUPREA_LOGISTICS.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" asp-append-version="true" />
+</head>
+<body class="vh-100">
+    <header class="bg-primary text-white d-flex align-items-center px-3" style="height:70px;">
+        <button class="btn btn-primary d-md-none me-3"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarMenu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="m-0">SUPREA LOGISTICS</h1>
+    </header>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0" style="height: calc(100vh - 70px);">
+
+            <!-- Sidebar (Desktop) -->
+            <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column bg-light p-3 border-end">
+                <h3 class="mb-3 text-center text-primary">Menu</h3>
+                <a href="/" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
+                <a href="#"class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-boxes-stacked me-2"></i>Logistics</a>
+                <a href="/VehicleManagement" class="text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-truck me-2"></i>Vehicle Management</a>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 col-lg-10 p-4 overflow-auto">
+                @RenderBody()
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <a class="d-block mb-2" href="/"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
+            <a class="d-block mb-2" href="#logistics"><i class="fa-solid fa-boxes-stacked me-2"></i>Logistics</a>
+            <a class="d-block" href="/VehicleManagement"><i class="fa-solid fa-truck me-2"></i>Vehicle Management</a>
+        </div>
+    </div>
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

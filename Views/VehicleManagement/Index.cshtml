@@ -1,0 +1,83 @@
+﻿@{
+	ViewData["Title"] = "Vehicle Management";
+}
+@model List<Vehicle>
+<div class="d-flex flex-row justify-content-between m-0 p-0">
+<h2 class="text-primary">Vehicle Management</h2>
+<div class="d-flex align-items-center gap-3">
+    <a href="#" class=" text-decoration-none"><i class="fa-solid fa-plus option-icon d-flex align-items-center"></i></a>
+    <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon d-flex align-items-center" onclick="window.location.reload()"></a>
+    <div class="dropdown option-icon d-flex align-items-center" style="cursor: pointer">
+        <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
+        <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Export as Excel</a></li>
+                <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+<div class="card overflow-auto">
+    <table class="table table-bordered table-hover">
+        <thead class="text-primary">
+            <tr>
+                <th>Vehicle Id</th>
+                <th>Unit Type</th>
+                <th>Unit Model/Series</th>
+                <th>Brand</th>
+                <th>Year Model</th>
+                <th>Engine No.</th>
+                <th>Chasis No.</th>
+                <th>Plate No.</th>
+                <th>OR/CR</th>
+                <th>Expiration</th>
+                <th>Insurance</th>
+                <th>Insurance Coverage</th>
+                <th>Insurance Provider</th>
+                <th>Date Acquired</th>
+                <th>Supplier</th>
+                <th>Project Id</th>
+                <th>Site Location</th>
+                <th>Vehicle Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var v in Model)
+            {
+                <tr id="@v.VehicleId">
+                    <td>@int.Parse(v.VehicleId).ToString("0000")</td>
+                    <td>@v.UnitType</td>
+                    <td>@v.UnitModelSeries</td>
+                    <td>@v.BrandMake</td>
+                    <td>@v.YearModel</td>
+                    <td>@v.EngineNo</td>
+                    <td>@v.ChasisNo</td>
+                    <td>@v.PlateNo</td>
+                    <td>@v.OrCr</td>
+                    <td>@v.Expiration</td>
+                    <td>@v.Insurance</td>
+                    <td>@v.InsuranceCoverage</td>
+                    <td>@v.InsuranceProvider</td>
+                    <td>@v.DateAcquired</td>
+                    <td>@v.Supplier</td>
+                    <td>@v.ProjectId</td>
+                    <td>@v.SiteLocation</td>
+                    <td>@v.VehicleStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('tbody tr').on("click", function() {
+                $('tbody tr').removeClass('table-active'); 
+                $(this).addClass('table-active');          
+                const id = this.id;
+                window.location.href = `/VehicleManagement/Details/${id}`;
+            });
+
+		});
+    </script>
+}
