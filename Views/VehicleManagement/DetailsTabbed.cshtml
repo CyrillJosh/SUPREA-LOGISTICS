@@ -1,0 +1,197 @@
+﻿@model Vehicle
+@{
+    ViewData["Title"] = Model.UnitType;
+}
+<div class="d-flex flex-row justify-content-between align-items-center border-bottom mb-2">
+    <div class="d-flex flex-row align-items-center gap-2 py-2">
+        <img src="" alt="@Model.UnitType" height="50" width="50" class="border border-1 rounded-2">
+        <h2 class="text-primary">@Model.UnitModelSeries - @int.Parse(Model.VehicleId).ToString("0000")</h2>
+    </div>
+    <div class="h-100 d-flex gap-3 justify-content-end align-items-center">
+        <a href="#" class="fa-solid fa-pen text-primary text-decoration-none option-icon text-center d-flex align-items-center"></a>
+        <a asp-action="Create" class="fa-solid fa-plus text-decoration-none option-icon text-center  d-flex align-items-center"></a>
+        <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon text-center  d-flex align-items-center" onclick="window.location.reload()"></a>
+        <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
+            <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown">
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Export</a></li>
+                <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                <li><a class="dropdown-item" href="/VehicleManagement/Details/@Model.VehicleId">Go to ScrollView</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<ul class="nav nav-tabs" id="info">
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" id="1">Properties</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="2">Pictures</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="3">Maintenance Log</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="4">Vehicle Log</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="5">Documents</a>
+    </li>
+</ul>
+<div id="content" class="p-2">
+    @* Properties *@
+    <div id="1" class="row gap-0">
+        <div class="row g-3">
+
+            <!-- General Information -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <h4 class="w-100 border-bottom mb-1 pb-1">General Information</h4>
+                <table class="w-100 table table-borderless">
+                    <tr>
+                        <td>Unit Type</td>
+                        <td>@Model.UnitType</td>
+                    </tr>
+                    <tr>
+                        <td>Unit Model / Series</td>
+                        <td>@Model.UnitModelSeries</td>
+                    </tr>
+                    <tr>
+                        <td>Brand</td>
+                        <td>@Model.BrandMake</td>
+                    </tr>
+                    <tr>
+                        <td>Year Model</td>
+                        <td>@Model.YearModel</td>
+                    </tr>
+                    <tr>
+                        <td>Plate No</td>
+                        <td>@Model.PlateNo</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>@Model.VehicleStatus</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Legal Details -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <h4 class="w-100 border-bottom mb-1 pb-1">Legal Details</h4>
+                <table class="w-100 table table-borderless">
+                    <tr>
+                        <td>Engine No</td>
+                        <td>@Model.EngineNo</td>
+                    </tr>
+                    <tr>
+                        <td>Chasis No</td>
+                        <td>@Model.ChasisNo</td>
+                    </tr>
+                    <tr>
+                        <td>OR / CR</td>
+                        <td>@Model.OrCr</td>
+                    </tr>
+                    <tr>
+                        <td>Expiration</td>
+                        <td>@Model.Expiration</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Insurance & Assignment -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <h4 class="w-100 border-bottom mb-1 pb-1">Insurance & Assignment</h4>
+                <table class="w-100 table table-borderless">
+                    <tr>
+                        <td>Insurance</td>
+                        <td>@Model.Insurance</td>
+                    </tr>
+                    <tr>
+                        <td>Insurance Coverage</td>
+                        <td>@Model.InsuranceCoverage</td>
+                    </tr>
+                    <tr>
+                        <td>Insurance Provider</td>
+                        <td>@Model.InsuranceProvider</td>
+                    </tr>
+                    <tr>
+                        <td>Date Acquired</td>
+                        <td>@Model.DateAcquired</td>
+                    </tr>
+                    <tr>
+                        <td>Supplier</td>
+                        <td>@Model.Supplier</td>
+                    </tr>
+                    <tr>
+                        <td>Project ID</td>
+                        <td>@Model.ProjectId</td>
+                    </tr>
+                    <tr>
+                        <td>Site Location</td>
+                        <td>@Model.SiteLocation</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+    @* Pictures *@
+    <div id="2" class="visually-hidden">
+
+    </div>
+    @* Maintenance Log *@
+    <div id="3" class="visually-hidden">
+        <table class="table table-bordered w-100">
+            <thead>
+                <tr>
+                    <th>Maintenance ID</th>
+                    <th>Date Issued</th>
+                    <th>Maintenance Type</th>
+                    <th>Work Performed</th>
+                    <th>Supplier</th>
+                    <th>Parts Replaced (Yes/No)</th>
+                    <th>Date Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    @* Vehicle Log *@
+    <div id="4" class="visually-hidden">
+
+    </div>
+    @* Documents *@
+    <div id="5" class="visually-hidden">
+
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function (){
+            $("#info a").on("click", function () {
+                var id = $(this).attr("id"); // 1,2,3,4
+
+                // set active tab
+                $("#info a").removeClass("active");
+                $(this).addClass("active");
+
+                // hide all content
+                $("#content > div").addClass("visually-hidden");
+
+                // show selected content
+                $("#content > div[id='" + id + "']").removeClass("visually-hidden");
+            });
+        })
+    </script>
+}

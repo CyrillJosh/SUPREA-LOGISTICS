@@ -5,7 +5,7 @@
 <div class="d-flex flex-row justify-content-between m-0 p-0">
 <h2 class="text-primary">Vehicle Management</h2>
 <div class="d-flex align-items-center gap-3">
-    <a href="#" class=" text-decoration-none"><i class="fa-solid fa-plus option-icon d-flex align-items-center"></i></a>
+    <a asp-action="Create" class=" text-decoration-none"><i class="fa-solid fa-plus option-icon d-flex align-items-center"></i></a>
     <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon d-flex align-items-center" onclick="window.location.reload()"></a>
     <div class="dropdown option-icon d-flex align-items-center" style="cursor: pointer">
         <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
@@ -75,7 +75,7 @@
                 $('tbody tr').removeClass('table-active'); 
                 $(this).addClass('table-active');          
                 const id = this.id;
-                window.location.href = `/VehicleManagement/Details/${id}`;
+                window.location.href = `/VehicleManagement/DetailsTabbed/${id}`;
             });
 
 		});

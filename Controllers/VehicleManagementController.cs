@@ -41,6 +41,25 @@ namespace SUPREA_LOGISTICS.Controllers
             return View(vehicle);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DetailsTabbed(string id)
+        {
+            string path = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "Vehicles.json"
+            );
+            string json = IOFile.ReadAllText(path);
+            var vehicles = JsonSerializer.Deserialize<List<Vehicle>>(json);
+            var vehicle = vehicles.FirstOrDefault(v => v.VehicleId == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return View(vehicle);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             return View();

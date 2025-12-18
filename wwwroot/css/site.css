@@ -58,6 +58,38 @@ nav a:hover {
     color: #0d6efd;
 }
 
+/* Side Key Container */
+.sidekey {
+    cursor: pointer;
+}
+
+/* Submenu wrapper */
+.sidekey .sidekey-links {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+
+.sidekey:hover .sidekey-links {
+    margin-top: .50rem;
+    max-height: fit-content;
+    opacity: 1;
+    padding-top: .25rem;
+}
+
+/* Links styling */
+.sidekey-link {
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.9rem;
+}
+
+.sidekey-link:hover {
+    color: var(--bs-primary);
+}
+
+
 /* Calendar */
 .calendar {
     display: grid;
@@ -83,3 +115,11 @@ nav a:hover {
     max-height: 20px;
 }
 
+/* Buttons */
+.tab div{
+    display: none;
+}
+
+.tab:active div{
+    display: block;
+}

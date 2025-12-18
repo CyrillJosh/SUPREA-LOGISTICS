@@ -1,0 +1,119 @@
+﻿@{
+	ViewData["Title"] = "Create Vehicle";
+}
+@model Vehicle
+@{
+    ViewData["Title"] = "Vehicle Form";
+}
+
+<h2 class="text-primary mb-4">@ViewData["Title"]</h2>
+
+<form asp-action="SaveVehicle" method="post" class="row g-3">
+
+    <!-- General Information -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <h4 class="border-bottom pb-1 mb-3">General Information</h4>
+
+        <div class="mb-2">
+            <label for="UnitType" class="form-label">Unit Type</label>
+            <input asp-for="UnitType" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="UnitModelSeries" class="form-label">Unit Model / Series</label>
+            <input asp-for="UnitModelSeries" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="BrandMake" class="form-label">Brand / Make</label>
+            <input asp-for="BrandMake" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="YearModel" class="form-label">Year Model</label>
+            <input asp-for="YearModel" class="form-control" type="number" />
+        </div>
+
+        <div class="mb-2">
+            <label for="PlateNo" class="form-label">Plate No.</label>
+            <input asp-for="PlateNo" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="VehicleStatus" class="form-label">Vehicle Status</label>
+            <input asp-for="VehicleStatus" class="form-control" />
+        </div>
+    </div>
+
+    <!-- Legal Details -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <h4 class="border-bottom pb-1 mb-3">Legal Details</h4>
+
+        <div class="mb-2">
+            <label for="EngineNo" class="form-label">Engine No.</label>
+            <input asp-for="EngineNo" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="ChasisNo" class="form-label">Chasis No.</label>
+            <input asp-for="ChasisNo" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="OrCr" class="form-label">OR / CR</label>
+            <input asp-for="OrCr" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="Expiration" class="form-label">Expiration</label>
+            <input asp-for="Expiration" class="form-control" type="date" />
+        </div>
+    </div>
+
+    <!-- Insurance & Assignment -->
+    <div class="col-12 col-md-6 col-lg-4">
+        <h4 class="border-bottom pb-1 mb-3">Insurance & Assignment</h4>
+
+        <div class="mb-2">
+            <label for="Insurance" class="form-label">Insurance</label>
+            <input asp-for="Insurance" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="InsuranceCoverage" class="form-label">Insurance Coverage</label>
+            <input asp-for="InsuranceCoverage" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="InsuranceProvider" class="form-label">Insurance Provider</label>
+            <input asp-for="InsuranceProvider" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="DateAcquired" class="form-label">Date Acquired</label>
+            <input asp-for="DateAcquired" class="form-control" type="date" />
+        </div>
+
+        <div class="mb-2">
+            <label for="Supplier" class="form-label">Supplier</label>
+            <input asp-for="Supplier" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="ProjectId" class="form-label">Project ID</label>
+            <input asp-for="ProjectId" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label for="SiteLocation" class="form-label">Site Location</label>
+            <input asp-for="SiteLocation" class="form-control" />
+        </div>
+    </div>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Save Vehicle</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+
+</form>
+

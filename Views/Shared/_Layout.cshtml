@@ -6,10 +6,10 @@
     <title>@ViewData["Title"] - SUPREA_LOGISTICS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SUPREA_LOGISTICS.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/fontawesome.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" asp-append-version="true" />
 </head>
-<body class="vh-100">
+<body class="vh-100 vw-100 m-0">
     <header class="bg-primary text-white d-flex align-items-center px-3" style="height:70px;">
         <button class="btn btn-primary d-md-none me-3"
                 type="button"
@@ -28,11 +28,49 @@
                 <h3 class="mb-3 text-center text-primary">Menu</h3>
                 <a href="/" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
                 <a href="#"class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-boxes-stacked me-2"></i>Logistics</a>
-                <a href="/VehicleManagement" class="text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-truck me-2"></i>Vehicle Management</a>
+                <div class="card p-2 d-flex border-0 sidekey">
+
+                    <div class="d-flex flex-row align-items-center text-primary justify-content-start">
+                        <i class="fa-solid fa-truck me-2"></i>
+                        <p class="m-0">Vehicle Management</p>
+                    </div>
+
+                    <div class="d-flex flex-column gap-0 sidekey-links">
+                        <a asp-controller="VehicleManagement" asp-action="Index" class="sidekey-link p-0 ps-2">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="fa-solid fa-list me-1"></i>
+                                Vehicle List
+                            </div>
+                        </a>
+
+                        <a href="#MaintenanceLogs" class="sidekey-link p-0 ps-2">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="fa-solid fa-screwdriver-wrench me-1"></i>
+                                Maintenance Logs
+                            </div>
+                        </a>
+
+                        <a href="#VehicleLogs" class="sidekey-link p-0 ps-2">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="fa-solid fa-clipboard-list me-1"></i>
+                                Vehicle Logs
+                            </div>
+                        </a>
+
+                        <a asp-action="Create" asp-controller="VehicleManagement" class="sidekey-link p-0 ps-2">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="fa-solid fa-plus me-1"></i>
+                                New Vehicle
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+
             </nav>
 
             <!-- Main Content -->
-            <main class="col-md-9 col-lg-10 p-4 overflow-auto">
+            <main class="col-md-9 col-lg-10 p-4 overflow-auto h-100">
                 @RenderBody()
             </main>
 
