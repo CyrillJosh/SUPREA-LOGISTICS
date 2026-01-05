@@ -1,15 +1,23 @@
-﻿@model Vehicle
+﻿@using SUPREA_LOGISTICS.ViewModels;
+@model VehicleDetailsViewModel;
 @{
-    ViewData["Title"] = Model.UnitType;
+    ViewData["Title"] = Model.Vehicle.UnitType;
 }
 <div class="d-flex flex-row justify-content-between align-items-center border-bottom mb-2">
     <div class="d-flex flex-row align-items-center gap-2 py-2">
-        <img src="" alt="@Model.UnitType" height="50" width="50" class="border border-1 rounded-2">
-        <h2 class="text-primary">@Model.UnitModelSeries - @int.Parse(Model.VehicleId).ToString("0000")</h2>
+        <img src="" alt="@Model.Vehicle.UnitType" height="50" width="50" class="border border-1 rounded-2">
+        <h2 class="text-primary">@Model.Vehicle.UnitModelSeries - @int.Parse(Model.Vehicle.VehicleId).ToString("0000")</h2>
     </div>
     <div class="h-100 d-flex gap-3 justify-content-end align-items-center">
         <a href="#" class="fa-solid fa-pen text-primary text-decoration-none option-icon text-center d-flex align-items-center"></a>
-        <a asp-action="Create" class="fa-solid fa-plus text-decoration-none option-icon text-center  d-flex align-items-center"></a>
+        <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
+            <a class="fa-solid fa-plus text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">New MaintenanceLog</a></li>
+                <li><a class="dropdown-item" href="#">New VehicleLog</a></li>
+                <li><a class="dropdown-item" asp-action="Create">New Vehicle</a></li>
+            </ul>
+        </div>
         <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon text-center  d-flex align-items-center" onclick="window.location.reload()"></a>
         <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
             <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown">
@@ -17,7 +25,6 @@
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Export</a></li>
                 <li><a class="dropdown-item" href="#">Export as PDF</a></li>
-                <li><a class="dropdown-item" href="/VehicleManagement/Details/@Model.VehicleId">Go to ScrollView</a></li>
             </ul>
         </div>
     </div>
@@ -50,27 +57,27 @@
                 <table class="w-100 table table-borderless">
                     <tr>
                         <td>Unit Type</td>
-                        <td>@Model.UnitType</td>
+                        <td>@Model.Vehicle.UnitType</td>
                     </tr>
                     <tr>
                         <td>Unit Model / Series</td>
-                        <td>@Model.UnitModelSeries</td>
+                        <td>@Model.Vehicle.UnitModelSeries</td>
                     </tr>
                     <tr>
                         <td>Brand</td>
-                        <td>@Model.BrandMake</td>
+                        <td>@Model.Vehicle.BrandMake</td>
                     </tr>
                     <tr>
                         <td>Year Model</td>
-                        <td>@Model.YearModel</td>
+                        <td>@Model.Vehicle.YearModel</td>
                     </tr>
                     <tr>
                         <td>Plate No</td>
-                        <td>@Model.PlateNo</td>
+                        <td>@Model.Vehicle.PlateNo</td>
                     </tr>
                     <tr>
                         <td>Status</td>
-                        <td>@Model.VehicleStatus</td>
+                        <td>@Model.Vehicle.VehicleStatus</td>
                     </tr>
                 </table>
             </div>
@@ -81,19 +88,19 @@
                 <table class="w-100 table table-borderless">
                     <tr>
                         <td>Engine No</td>
-                        <td>@Model.EngineNo</td>
+                        <td>@Model.Vehicle.EngineNo</td>
                     </tr>
                     <tr>
                         <td>Chasis No</td>
-                        <td>@Model.ChasisNo</td>
+                        <td>@Model.Vehicle.ChasisNo</td>
                     </tr>
                     <tr>
                         <td>OR / CR</td>
-                        <td>@Model.OrCr</td>
+                        <td>@Model.Vehicle.OrCr</td>
                     </tr>
                     <tr>
                         <td>Expiration</td>
-                        <td>@Model.Expiration</td>
+                        <td>@Model.Vehicle.Expiration</td>
                     </tr>
                 </table>
             </div>
@@ -104,31 +111,31 @@
                 <table class="w-100 table table-borderless">
                     <tr>
                         <td>Insurance</td>
-                        <td>@Model.Insurance</td>
+                        <td>@Model.Vehicle.Insurance</td>
                     </tr>
                     <tr>
                         <td>Insurance Coverage</td>
-                        <td>@Model.InsuranceCoverage</td>
+                        <td>@Model.Vehicle.InsuranceCoverage</td>
                     </tr>
                     <tr>
                         <td>Insurance Provider</td>
-                        <td>@Model.InsuranceProvider</td>
+                        <td>@Model.Vehicle.InsuranceProvider</td>
                     </tr>
                     <tr>
                         <td>Date Acquired</td>
-                        <td>@Model.DateAcquired</td>
+                        <td>@Model.Vehicle.DateAcquired</td>
                     </tr>
                     <tr>
                         <td>Supplier</td>
-                        <td>@Model.Supplier</td>
+                        <td>@Model.Vehicle.Supplier</td>
                     </tr>
                     <tr>
                         <td>Project ID</td>
-                        <td>@Model.ProjectId</td>
+                        <td>@Model.Vehicle.ProjectId</td>
                     </tr>
                     <tr>
                         <td>Site Location</td>
-                        <td>@Model.SiteLocation</td>
+                        <td>@Model.Vehicle.SiteLocation</td>
                     </tr>
                 </table>
             </div>
@@ -138,7 +145,13 @@
     </div>
     @* Pictures *@
     <div id="2" class="visually-hidden">
-
+        <div class="h-100 w-100 d-flex">
+            <img src="" alt="Pic" style="max-height:31vh; max-width:31vw"/>
+            @* @foreach(var pic in Model.Pictures)
+            {
+                <img src="@pic" alt="Vehicle Picture" class="img-thumbnail m-1" style="max-width:50vw"/>
+			} *@
+        </div>
     </div>
     @* Maintenance Log *@
     <div id="3" class="visually-hidden">
@@ -155,25 +168,73 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+@*                 @foreach(var log in Model.MaintenanceLogs)
+                {
+                    <tr>
+                        <td>@log.MaintenanceId</td>
+                        <td>@log.DateIssued.ToString("MM/dd/yyyy")</td>
+                        <td>@log.MaintenanceType</td>
+                        <td>@log.WorkPerformed</td>
+                        <td>@log.Supplier</td>
+                        <td>@(log.PartsReplaced ? "Yes" : "No")</td>
+                        <td>@log.DateDone.ToString("MM/dd/yyyy")</td>
+                    </tr>
+				} *@
             </tbody>
         </table>
     </div>
     @* Vehicle Log *@
     <div id="4" class="visually-hidden">
-
+        <table class="table table-bordered w-100">
+            <thead>
+                <tr>
+                    <th>Log ID</th>
+                    <th>Date</th>
+                    <th>Driver Name</th>
+                    <th>Start Odometer</th>
+                    <th>End Odometer</th>
+                    <th>Distance Traveled</th>
+                    <th>Purpose of Trip</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* @foreach (var log in Model.VehicleLogs)
+                {
+                    <tr>
+                        <td>@log.LogId</td>
+                        <td>@log.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@log.DriverName</td>
+                        <td>@log.StartOdometer</td>
+                        <td>@log.EndOdometer</td>
+                        <td>@(log.EndOdometer - log.StartOdometer)</td>
+                        <td>@log.PurposeOfTrip</td>
+                    </tr>
+                } *@
+            </tbody>
+        </table>
     </div>
     @* Documents *@
     <div id="5" class="visually-hidden">
-
+        <table class="w-100">
+            <thead>
+                <tr>
+                    <th>Document Name</th>
+                    <th>Type</th>
+                    <th>Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+@*                 @foreach(var doc in Model.Documents)
+                {
+                    <tr>
+                        <td>@doc.DocumentName</td>
+                        <td>@doc.DocumentType</td>
+                        <td>@doc.Updated.ToString("MM/dd/yyyy")</td>
+                    </tr>
+				} *@
+              
+            </tbody>
+        </table>
     </div>
 </div>
 @section Scripts{
