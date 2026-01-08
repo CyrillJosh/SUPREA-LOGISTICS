@@ -1,15 +1,25 @@
-﻿namespace SUPREA_LOGISTICS.Models
-{
-    public class MaintenanceLog
-    {
-        public int MaintenanceId { get; set; }
-        public string VehicleId { get; set; }   // Links to Vehicle.VehicleId
+﻿using System;
+using System.Collections.Generic;
 
-        public DateTime DateIssued { get; set; }
-        public string MaintenanceType { get; set; }
-        public string WorkPerformed { get; set; }
-        public string Supplier { get; set; }
-        public bool PartsReplaced { get; set; }
-        public DateTime DateDone { get; set; }
-    }
+namespace SUPREA_LOGISTICS.Models;
+
+public partial class MaintenanceLog
+{
+    public int MaintenanceId { get; set; }
+
+    public int VehicleId { get; set; }
+
+    public DateOnly MaintenanceDate { get; set; }
+
+    public string? MaintenanceType { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? ServiceProvider { get; set; }
+
+    public decimal? Cost { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual Vehicle Vehicle { get; set; } = null!;
 }

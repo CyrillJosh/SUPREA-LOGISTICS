@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using SUPREA_LOGISTICS.Context;
+
 namespace SUPREA_LOGISTICS
 {
     public class Program
@@ -8,7 +11,13 @@ namespace SUPREA_LOGISTICS
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddDbContext<MyDBContext>(options =>
+                options
+                    .UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:Default").Value,
+                        sql => sql.EnableRetryOnFailure())
+                    .EnableSensitiveDataLogging(),
+                ServiceLifetime.Transient
+            );
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

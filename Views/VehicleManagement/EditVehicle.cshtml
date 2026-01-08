@@ -1,24 +1,25 @@
 ﻿@{
-	ViewData["Title"] = "Create Vehicle";
+    ViewData["Title"] = "Create Vehicle";
 }
 @model Vehicle
 
 <h2 class="text-primary mb-4">@ViewData["Title"]</h2>
 
-<form asp-action="CreateVehicle" method="post" class="row g-3">
-
+<form asp-action="EditVehicle" method="post" class="row g-3" data="@Model">
+    <!--HIDDEN VALUES-->
+    <input asp-for="VehicleId" hidden />
     <!-- General Information -->
     <div class="col-12 col-md-6 col-lg-4">
         <h4 class="border-bottom pb-1 mb-3">General Information</h4>
 
         <div class="mb-2">
             <label for="UnitType" class="form-label">Unit Type</label>
-            <input asp-for="UnitType" class="form-control" required/>
+            <input asp-for="UnitType" class="form-control" required />
         </div>
 
         <div class="mb-2">
             <label for="UnitModelSeries" class="form-label">Unit Model / Series</label>
-            <input asp-for="UnitModelSeries" class="form-control" required/>
+            <input asp-for="UnitModelSeries" class="form-control" required />
         </div>
 
         <div class="mb-2">
@@ -38,7 +39,7 @@
 
         <div class="mb-2">
             <label for="VehicleStatus" class="form-label">Vehicle Status</label>
-            <input asp-for="VehicleStatus" class="form-control" value="OK"/>
+            <input asp-for="VehicleStatus" class="form-control" value="@(Model.VehicleStatus?? "OK")" />
         </div>
     </div>
 

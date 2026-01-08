@@ -1,62 +1,51 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
-namespace SUPREA_LOGISTICS.Models
+namespace SUPREA_LOGISTICS.Models;
+
+public partial class Vehicle
 {
-    public class Vehicle
-    {
-        [JsonPropertyName("VECHICLE ID")]
-        public string VehicleId { get; set; }
+    public int VehicleId { get; set; }
 
-        [JsonPropertyName("UNIT TYPE")]
-        public string UnitType { get; set; }
+    public string? UnitType { get; set; }
 
-        [JsonPropertyName("UNIT MODEL/SERIES")]
-        public string UnitModelSeries { get; set; }
+    public string? UnitModelSeries { get; set; }
 
-        [JsonPropertyName("BRAND/MAKE")]
-        public string BrandMake { get; set; }
+    public string? BrandMake { get; set; }
 
-        [JsonPropertyName("YEAR MODEL")]
-        public string YearModel { get; set; }
+    public int? YearModel { get; set; }
 
-        [JsonPropertyName("ENGINE NO.")]
-        public string EngineNo { get; set; }
+    public string? EngineNo { get; set; }
 
-        [JsonPropertyName("CHASIS NO.")]
-        public string ChasisNo { get; set; }
+    public string? ChassisNo { get; set; }
 
-        [JsonPropertyName("PLATE NO")]
-        public string PlateNo { get; set; }
+    public string? PlateNo { get; set; }
 
-        [JsonPropertyName("OR/CR")]
-        public string OrCr { get; set; }
+    public bool? Orcr { get; set; }
 
-        [JsonPropertyName("EXPIRATION")]
-        public string Expiration { get; set; }
+    public DateOnly? ExpirationDate { get; set; }
 
-        [JsonPropertyName("INSURANCE ")]
-        public string Insurance { get; set; }
+    public string? Insurance { get; set; }
 
-        [JsonPropertyName("INSURANCE COVERAGE")]
-        public string InsuranceCoverage { get; set; }
+    public string? InsuranceCoverage { get; set; }
 
-        [JsonPropertyName("INSURANCE PROVIDER")]
-        public string InsuranceProvider { get; set; }
+    public string? InsuranceProvider { get; set; }
 
-        [JsonPropertyName("DATE ACQUIRED")]
-        public string DateAcquired { get; set; }
+    public DateOnly? DateAcquired { get; set; }
 
-        [JsonPropertyName("SUPPLIER")]
-        public string Supplier { get; set; }
+    public string? Supplier { get; set; }
 
-        [JsonPropertyName("PROJECT ID")]
-        public string ProjectId { get; set; }
+    public string? ProjectId { get; set; }
 
-        [JsonPropertyName("SITE LOCATION")]
-        public string SiteLocation { get; set; }
+    public string? SiteLocation { get; set; }
 
-        [JsonPropertyName("VEHICLE STATUS")]
-        public string VehicleStatus { get; set; }
-    }
+    public string? VehicleStatus { get; set; }
 
+    public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
+
+    public virtual ICollection<VehicleDocument> VehicleDocuments { get; set; } = new List<VehicleDocument>();
+
+    public virtual ICollection<VehicleLog> VehicleLogs { get; set; } = new List<VehicleLog>();
+
+    public virtual ICollection<VehiclePicture> VehiclePictures { get; set; } = new List<VehiclePicture>();
 }

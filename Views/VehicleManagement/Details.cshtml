@@ -1,21 +1,21 @@
 ﻿@using SUPREA_LOGISTICS.ViewModels;
-@model VehicleDetailsViewModel;
+@model Vehicle;
 @{
-    ViewData["Title"] = Model.Vehicle.UnitType;
+    ViewData["Title"] = Model.UnitType;
 }
 <div class="d-flex flex-row justify-content-between align-items-center border-bottom mb-2">
     <div class="d-flex flex-row align-items-center gap-2 py-2">
-        <img src="" alt="@Model.Vehicle.UnitType" height="50" width="50" class="border border-1 rounded-2">
-        <h2 class="text-primary">@Model.Vehicle.UnitModelSeries - @int.Parse(Model.Vehicle.VehicleId).ToString("0000")</h2>
+        <img src="" alt="@Model.UnitType" height="50" width="50" class="border border-1 rounded-2">
+        <h2 class="text-primary">@Model.UnitModelSeries - @Model.VehicleId.ToString("0000")</h2>
     </div>
     <div class="h-100 d-flex gap-3 justify-content-end align-items-center">
-        <a href="#" class="fa-solid fa-pen text-primary text-decoration-none option-icon text-center d-flex align-items-center"></a>
+        <a asp-action="EditVehicle" asp-route-id="@Model.VehicleId" class="fa-solid fa-pen text-primary text-decoration-none option-icon text-center d-flex align-items-center"></a>
         <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
             <a class="fa-solid fa-plus text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">New MaintenanceLog</a></li>
                 <li><a class="dropdown-item" href="#">New VehicleLog</a></li>
-                <li><a class="dropdown-item" asp-action="Create">New Vehicle</a></li>
+                <li><a class="dropdown-item" asp-action="CreateVehicle">New Vehicle</a></li>
             </ul>
         </div>
         <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon text-center  d-flex align-items-center" onclick="window.location.reload()"></a>
@@ -57,27 +57,27 @@
                 <table class="w-100 table table-borderless">
                     <tr>
                         <td>Unit Type</td>
-                        <td>@Model.Vehicle.UnitType</td>
+                        <td>@Model.UnitType</td>
                     </tr>
                     <tr>
                         <td>Unit Model / Series</td>
-                        <td>@Model.Vehicle.UnitModelSeries</td>
+                        <td>@Model.UnitModelSeries</td>
                     </tr>
                     <tr>
                         <td>Brand</td>
-                        <td>@Model.Vehicle.BrandMake</td>
+                        <td>@Model.BrandMake</td>
                     </tr>
                     <tr>
                         <td>Year Model</td>
-                        <td>@Model.Vehicle.YearModel</td>
+                        <td>@Model.YearModel</td>
                     </tr>
                     <tr>
                         <td>Plate No</td>
-                        <td>@Model.Vehicle.PlateNo</td>
+                        <td>@Model.PlateNo</td>
                     </tr>
                     <tr>
                         <td>Status</td>
-                        <td>@Model.Vehicle.VehicleStatus</td>
+                        <td>@Model.VehicleStatus</td>
                     </tr>
                 </table>
             </div>
@@ -88,19 +88,19 @@
                 <table class="w-100 table table-borderless">
                     <tr>
                         <td>Engine No</td>
-                        <td>@Model.Vehicle.EngineNo</td>
+                        <td>@Model.EngineNo</td>
                     </tr>
                     <tr>
                         <td>Chasis No</td>
-                        <td>@Model.Vehicle.ChasisNo</td>
+                        <td>@Model.ChassisNo</td>
                     </tr>
                     <tr>
                         <td>OR / CR</td>
-                        <td>@Model.Vehicle.OrCr</td>
+                        <td>@Model.Orcr</td>
                     </tr>
                     <tr>
                         <td>Expiration</td>
-                        <td>@Model.Vehicle.Expiration</td>
+                        <td>@Model.ExpirationDate</td>
                     </tr>
                 </table>
             </div>
@@ -111,31 +111,31 @@
                 <table class="w-100 table table-borderless">
                     <tr>
                         <td>Insurance</td>
-                        <td>@Model.Vehicle.Insurance</td>
+                        <td>@Model.Insurance</td>
                     </tr>
                     <tr>
                         <td>Insurance Coverage</td>
-                        <td>@Model.Vehicle.InsuranceCoverage</td>
+                        <td>@Model.InsuranceCoverage</td>
                     </tr>
                     <tr>
                         <td>Insurance Provider</td>
-                        <td>@Model.Vehicle.InsuranceProvider</td>
+                        <td>@Model.InsuranceProvider</td>
                     </tr>
                     <tr>
                         <td>Date Acquired</td>
-                        <td>@Model.Vehicle.DateAcquired</td>
+                        <td>@Model.DateAcquired</td>
                     </tr>
                     <tr>
                         <td>Supplier</td>
-                        <td>@Model.Vehicle.Supplier</td>
+                        <td>@Model.Supplier</td>
                     </tr>
                     <tr>
                         <td>Project ID</td>
-                        <td>@Model.Vehicle.ProjectId</td>
+                        <td>@Model.ProjectId</td>
                     </tr>
                     <tr>
                         <td>Site Location</td>
-                        <td>@Model.Vehicle.SiteLocation</td>
+                        <td>@Model.SiteLocation</td>
                     </tr>
                 </table>
             </div>
@@ -145,12 +145,46 @@
     </div>
     @* Pictures *@
     <div id="2" class="visually-hidden">
-        <div class="h-100 w-100 d-flex">
-            <img src="" alt="Pic" style="max-height:31vh; max-width:31vw"/>
-            @* @foreach(var pic in Model.Pictures)
+        <div class="w-100 d-flex justify-content-between">
+            <h4>Vehicle Pictures</h4>
+            <div class="d-flex flex-coloumn g-2">
+				<a asp-action="UploadPicture" class="text-decoration-none"><i class="fa-plus h4"></i></a>
+            </div>
+        </div>
+        @* <a asp-action="UploadPicture">Add pic</a> *@
+        @* <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+
+            <input type="file" name="file" class="form-control" required />
+
+            <button type="submit" class="btn btn-primary mt-2">Upload Picture</button>
+        </form> *@
+
+        <div class="row">
+            @foreach (var pic in Model.VehiclePictures)
             {
-                <img src="@pic" alt="Vehicle Picture" class="img-thumbnail m-1" style="max-width:50vw"/>
-			} *@
+                <div class="col-md-3 mb-2">
+                    <img src="@Url.Action("ViewPicture", "VehicleManagement", new { id = pic.PictureId })"
+                         class="img-thumbnail preview-image"
+                         style="cursor:pointer; max-width:100%;"
+                         data-bs-toggle="modal"
+                         data-bs-target="#imageModal"
+                         data-bs-src="@Url.Action("ViewPicture", "VehicleManagement", new { id = pic.PictureId })" />
+                </div>
+            }
+        </div>
+        @* Bootstrap Modal *@
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <img id="modalImage" src="" class="img-fluid w-100" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     @* Maintenance Log *@
@@ -168,7 +202,7 @@
                 </tr>
             </thead>
             <tbody>
-@*                 @foreach(var log in Model.MaintenanceLogs)
+                @*                 @foreach(var log in Model.MaintenanceLogs)
                 {
                     <tr>
                         <td>@log.MaintenanceId</td>
@@ -185,6 +219,7 @@
     </div>
     @* Vehicle Log *@
     <div id="4" class="visually-hidden">
+            
         <table class="table table-bordered w-100">
             <thead>
                 <tr>
@@ -215,29 +250,85 @@
     </div>
     @* Documents *@
     <div id="5" class="visually-hidden">
-        <table class="w-100">
-            <thead>
+        <h4>Documents</h4>
+@*         <h4 class="mt-4">Upload Document</h4>
+
+        <form asp-action="UploadDocument"
+              asp-controller="VehicleManagement"
+              method="post"
+              enctype="multipart/form-data"
+              class="border p-3 rounded">
+
+            <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+
+            <div class="mb-2">
+                <label class="form-label">Document Type</label>
+                <select name="documentType" class="form-select" required>
+                    <option value="">-- Select --</option>
+                    <option value="OR/CR">OR / CR</option>
+                    <option value="Insurance">Insurance</option>
+                    <option value="Registration">Registration</option>
+                    <option value="Deed of Sale">Deed of Sale</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Expiration Date</label>
+                <input type="date" name="expirationDate" class="form-control" />
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Upload File</label>
+                <input type="file" name="file" class="form-control"
+                       accept=".pdf,.jpg,.jpeg,.png" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Upload Document
+            </button>
+        </form> *@
+
+        <table class="table">
+            <tr>
+                <th>Type</th>
+                <th>File</th>
+                <th>Expiration</th>
+                <td>Action</td>
+            </tr>
+            @foreach (var doc in Model.VehicleDocuments)
+            {
                 <tr>
-                    <th>Document Name</th>
-                    <th>Type</th>
-                    <th>Updated</th>
+                    <td>@doc.DocumentType</td>
+                    <td>@doc.FileName</td>
+                    <td>@doc.ExpirationDate?.ToShortDateString()</td>
+                    <td>
+                        <a href="@Url.Action("DownloadDocument", "VehicleManagement", new { id = doc.DocumentId })"
+                           class="btn btn-sm btn-success" target="_blank">Download</a>
+
+                        <button class="btn btn-sm btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#docModal"
+                                data-bs-src="@Url.Action("ViewDocument", "VehicleManagement", new { id = doc.DocumentId })">
+                            Preview
+                        </button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-@*                 @foreach(var doc in Model.Documents)
-                {
-                    <tr>
-                        <td>@doc.DocumentName</td>
-                        <td>@doc.DocumentType</td>
-                        <td>@doc.Updated.ToString("MM/dd/yyyy")</td>
-                    </tr>
-				} *@
-              
-            </tbody>
+            }
         </table>
+        <div class="modal fade" id="docModal">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <iframe id="modalDoc" src="" frameborder="0" style="width:100%; height:80vh;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
-@section Scripts{
+@section Scripts {
     <script>
         $(document).ready(function (){
             $("#info a").on("click", function () {
@@ -254,5 +345,22 @@
                 $("#content > div[id='" + id + "']").removeClass("visually-hidden");
             });
         })
+        const imageModal = document.getElementById('imageModal')
+        imageModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget
+            const src = button.getAttribute('data-bs-src')
+            const modalImg = imageModal.querySelector('#modalImage')
+            modalImg.src = src
+        })
+        var docModal = document.getElementById('docModal');
+        docModal.addEventListener('show.bs.modal', function (event) {
+            var btn = event.relatedTarget;
+            var src = btn.getAttribute('data-bs-src');
+            docModal.querySelector('#modalDoc').src = src;
+        });
+        docModal.addEventListener('hidden.bs.modal', function () {
+            docModal.querySelector('#modalDoc').src = '';
+        });
+
     </script>
 }

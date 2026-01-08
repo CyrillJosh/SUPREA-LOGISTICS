@@ -1,81 +1,177 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SUPREA_LOGISTICS.Context;
 using SUPREA_LOGISTICS.Models;
-using SUPREA_LOGISTICS.ViewModels;
-using System.Text.Json;
-using IOFile = System.IO.File;
+using System.Text;
 
 namespace SUPREA_LOGISTICS.Controllers
 {
     public class VehicleManagementController : Controller
     {
-        //Vehicle List using JSON file
-        //Subject to change in the future
-        //Change to Database in the future
+        private readonly MyDBContext _context;
+
+        public VehicleManagementController(MyDBContext context)
+        {
+            _context = context;
+        }
+
+        //View all vehicles
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string path = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                "Vehicles.json"
-            );
-
-            string json = IOFile.ReadAllText(path);
-            var vehicles = JsonSerializer.Deserialize<List<Vehicle>>(json);
-
             //Database
-            //var vehicles = _context.Vehicles.ToList();
+            var vehicles = _context.Vehicles.ToList();
 
             return View(vehicles);
         }
 
 
         //View for Vehicle Details
-        //Subject to change in the future
-        //Change to Database in the future
         [HttpGet]
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
-            string path = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                "Vehicles.json"
-            );
-            string json = IOFile.ReadAllText(path);
-            var vehicles = JsonSerializer.Deserialize<List<Vehicle>>(json);
-            var vehicle = vehicles.FirstOrDefault(v => v.VehicleId == id);
+            if(id <= 0)
+            {
+                return NotFound();
+            }
+            var vehicle = _context.Vehicles
+                .Include(x => x.VehiclePictures)
+                .Include(x => x.VehicleDocuments)
+                .Include(x => x.MaintenanceLogs)
+                .FirstOrDefault(x => x.VehicleId == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            //Database
-            //var vehicles = _context.Vehicles.FirstOrDefault(x => x.VehicleId = id);
 
-            VehicleDetailsViewModel viewModel = new VehicleDetailsViewModel
-            {
-                Vehicle = vehicle,
-                MaintenanceLogs = new List<MaintenanceLog>(), // Placeholder for future data
-                VehicleLogs = new List<VehicleLog>(),         // Placeholder for future data
-                Documents = new List<Document>(),              // Placeholder for future data
-                Pictures = new List<Picture>()                 // Placeholder for future data
-            };
-            return View(viewModel);
+            return View(vehicle);
         }
 
+        [HttpGet]
+        public IActionResult ViewPicture(int id)
+        {
+            var pic = _context.VehiclePictures.Find(id);
+            if (pic == null) return NotFound();
+
+            return File(pic.FileData, pic.FileType);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadPicture(int vehicleId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded");
+
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+
+            var picture = new VehiclePicture
+            {
+                VehicleId = vehicleId,
+                FileName = file.FileName,
+                FileType = file.ContentType,
+                FileData = memoryStream.ToArray(),
+                UploadedDate = DateTime.Now,
+            };
+
+            _context.VehiclePictures.Add(picture);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = vehicleId });
+        }
+
+        [HttpGet]
+        public IActionResult ViewDocument(int id)
+        {
+            var doc = _context.VehicleDocuments.FirstOrDefault(d => d.DocumentId == id);
+            if (doc == null)
+                return NotFound();
+
+            return File(doc.FileData, doc.FileType);
+        }
+
+
+        [HttpGet]
+        public IActionResult DownloadDocument(int id)
+        {
+            var doc = _context.VehicleDocuments.Find(id);
+            if (doc == null)
+                return NotFound();
+
+            return File(doc.FileData, doc.FileType, doc.FileName);
+        }
+         
+
+        [HttpPost]
+        public async Task<IActionResult> UploadDocument(
+            int vehicleId,
+            string documentType,
+            IFormFile file,
+            DateOnly? expirationDate)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded");
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            var doc = new VehicleDocument
+            {
+                VehicleId = vehicleId,
+                DocumentType = documentType,
+                FileName = file.FileName,
+                FileType = file.ContentType,
+                FileData = ms.ToArray(),
+                ExpirationDate = expirationDate,
+                UploadedDate = DateTime.Now,
+            };
+
+            _context.VehicleDocuments.Add(doc);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = vehicleId });
+        }
+        public IActionResult ExportCSV()
+        {
+            var vehicles = _context.Vehicles.ToList(); // get data from DB
+            var sb = new StringBuilder();
+
+            // Header
+            sb.AppendLine("VehicleID,UnitType,Brand,Year");
+
+            // Rows
+            foreach (var v in vehicles)
+            {
+                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.BrandMake},{v.YearModel}");
+            }
+
+            return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "vehicles.csv");
+        }
+
+
         //Edit Vehicle Data
-        //Placeholder for future database implementation
         [HttpGet]
         public IActionResult EditVehicle(string id)
         {
-            return View();
+            var vehicle = _context.Vehicles.FirstOrDefault(x => x.VehicleId.ToString() == id);
+            return View(vehicle);
         }
         //Edit Vehicle Data - Post
         [HttpPost]
         public async Task<IActionResult> EditVehicle(Vehicle vehicle)
         {
-            //Placeholder for future database update logic
-            return RedirectToAction("Details");
+            if(!ModelState.IsValid)
+            {
+                return View(vehicle);
+            }
+            _context.Vehicles.Update(vehicle);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(
+                "Details",
+                "VehicleManagement",
+                new { id = vehicle.VehicleId }
+            );
+
         }
 
         //Create new vehicle data
@@ -88,6 +184,13 @@ namespace SUPREA_LOGISTICS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVehicle(Vehicle vehicle)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(vehicle);
+            }
+            _context.Vehicles.Add(vehicle);
+            await _context.SaveChangesAsync();
+
             //Placeholder for future database create logic
             return RedirectToAction("Index");
         }

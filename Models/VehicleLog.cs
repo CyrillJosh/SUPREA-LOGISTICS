@@ -1,19 +1,25 @@
-﻿namespace SUPREA_LOGISTICS.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace SUPREA_LOGISTICS.Models;
+
+public partial class VehicleLog
 {
-    public class VehicleLog
-    {
-        public int LogId { get; set; }
-        public string VehicleId { get; set; }   // Links to Vehicle.VehicleId
+    public int LogId { get; set; }
 
-        public DateTime Date { get; set; }
-        public string DriverName { get; set; }
-        public string VehiclePlateNo { get; set; }
+    public int VehicleId { get; set; }
 
-        public int StartOdometer { get; set; }
-        public int EndOdometer { get; set; }
+    public DateOnly LogDate { get; set; }
 
-        public string PurposeOfTrip { get; set; }
+    public string? DriverName { get; set; }
 
-        public int DistanceTraveled => EndOdometer - StartOdometer;
-    }
+    public string? Purpose { get; set; }
+
+    public int? OdometerStart { get; set; }
+
+    public int? OdometerEnd { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual Vehicle Vehicle { get; set; } = null!;
 }
