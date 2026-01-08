@@ -131,18 +131,18 @@ namespace SUPREA_LOGISTICS.Controllers
 
             return RedirectToAction("Details", new { id = vehicleId });
         }
-        public IActionResult ExportCSV()
+        public IActionResult Export()
         {
             var vehicles = _context.Vehicles.ToList(); // get data from DB
             var sb = new StringBuilder();
 
             // Header
-            sb.AppendLine("VehicleID,UnitType,Brand,Year");
+            sb.AppendLine("VehicleID,Unit Type,Unit Model Series,Brandmake,Year Model, Engine No.,Chassis No., Plate No.,ORCR, Expiration Date, Insurance, Insurance Coverage, Insurance Provider, Date Aquired, Supplier, ProjectID, Site Location, Vehicle Status");
 
             // Rows
             foreach (var v in vehicles)
             {
-                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.BrandMake},{v.YearModel}");
+                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.UnitModelSeries},{v.BrandMake},{v.YearModel},{v.EngineNo},{v.ChassisNo},{v.PlateNo},{v.Orcr},{v.ExpirationDate},{v.Insurance},{v.InsuranceCoverage},{v.InsuranceProvider},{v.DateAcquired},{v.Supplier},{v.ProjectId},{v.SiteLocation},{v.VehicleStatus}");
             }
 
             return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "vehicles.csv");
