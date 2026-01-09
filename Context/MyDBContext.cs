@@ -62,6 +62,7 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.Insurance).HasMaxLength(100);
             entity.Property(e => e.InsuranceCoverage).HasMaxLength(200);
             entity.Property(e => e.InsuranceProvider).HasMaxLength(100);
+            entity.Property(e => e.IsAvailable).HasDefaultValue(true);
             entity.Property(e => e.Orcr).HasColumnName("ORCR");
             entity.Property(e => e.PlateNo).HasMaxLength(50);
             entity.Property(e => e.ProjectId)
@@ -76,13 +77,14 @@ public partial class MyDBContext : DbContext
 
         modelBuilder.Entity<VehicleDocument>(entity =>
         {
-            entity.HasKey(e => e.DocumentId).HasName("PK__VehicleD__1ABEEF6FDF8790C0");
+            entity.HasKey(e => e.DocumentId).HasName("PK__VehicleD__1ABEEF6FCB35433C");
 
             entity.Property(e => e.DocumentId).HasColumnName("DocumentID");
             entity.Property(e => e.DocumentNumber).HasMaxLength(100);
             entity.Property(e => e.DocumentType).HasMaxLength(100);
             entity.Property(e => e.FileName).HasMaxLength(255);
             entity.Property(e => e.FileType).HasMaxLength(50);
+            entity.Property(e => e.IsAvailable).HasDefaultValue(true);
             entity.Property(e => e.UploadedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -112,11 +114,12 @@ public partial class MyDBContext : DbContext
 
         modelBuilder.Entity<VehiclePicture>(entity =>
         {
-            entity.HasKey(e => e.PictureId).HasName("PK__VehicleP__8C2866F85B784B4C");
+            entity.HasKey(e => e.PictureId).HasName("PK__VehicleP__8C2866F86FB97AD6");
 
             entity.Property(e => e.PictureId).HasColumnName("PictureID");
             entity.Property(e => e.FileName).HasMaxLength(255);
             entity.Property(e => e.FileType).HasMaxLength(50);
+            entity.Property(e => e.IsAvailable).HasDefaultValue(true);
             entity.Property(e => e.UploadedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");

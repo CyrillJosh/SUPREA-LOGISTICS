@@ -17,5 +17,7 @@ public partial class VehiclePicture
 
     public DateTime? UploadedDate { get; set; }
 
+    public bool IsAvailable { get; set; }
+
     public virtual Vehicle Vehicle { get; set; } = null!;
 }

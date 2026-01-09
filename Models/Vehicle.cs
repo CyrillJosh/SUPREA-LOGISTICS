@@ -41,6 +41,8 @@ public partial class Vehicle
 
     public string? VehicleStatus { get; set; }
 
+    public bool IsAvailable { get; set; }
+
     public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
 
     public virtual ICollection<VehicleDocument> VehicleDocuments { get; set; } = new List<VehicleDocument>();

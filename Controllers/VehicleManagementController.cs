@@ -20,7 +20,7 @@ namespace SUPREA_LOGISTICS.Controllers
         public async Task<IActionResult> Index()
         {
             //Database
-            var vehicles = _context.Vehicles.ToList();
+            var vehicles = _context.Vehicles.Where(x => x.IsAvailable).ToList();
 
             return View(vehicles);
         }
@@ -51,7 +51,7 @@ namespace SUPREA_LOGISTICS.Controllers
         [HttpGet]
         public IActionResult ViewPicture(int id)
         {
-            var pic = _context.VehiclePictures.Find(id);
+            var pic = _context.VehiclePictures.FirstOrDefault(x => x.PictureId == id);
             if (pic == null) return NotFound();
 
             return File(pic.FileData, pic.FileType);
@@ -79,6 +79,19 @@ namespace SUPREA_LOGISTICS.Controllers
 
             return RedirectToAction("Details", new { id = vehicleId });
         }
+        //[HttpPost]
+        //public async Task<IActionResult> DeletePicture(int pictureId)
+        //{
+        //    var picture = await _context.VehiclePictures.FindAsync(pictureId);
+        //    if (picture == null)
+        //        return NotFound();
+
+        //    _context.VehiclePictures.Remove(picture);
+        //    await _context.SaveChangesAsync();
+
+        //    // Redirect back to vehicle details
+        //    return RedirectToAction("Details", new { id = picture.VehicleId });
+        //}
 
         [HttpGet]
         public IActionResult ViewDocument(int id)
@@ -94,7 +107,7 @@ namespace SUPREA_LOGISTICS.Controllers
         [HttpGet]
         public IActionResult DownloadDocument(int id)
         {
-            var doc = _context.VehicleDocuments.Find(id);
+            var doc = _context.VehicleDocuments.FirstOrDefault(x=> x.DocumentId == id && x.IsAvailable);
             if (doc == null)
                 return NotFound();
 
@@ -133,7 +146,7 @@ namespace SUPREA_LOGISTICS.Controllers
         }
         public IActionResult Export()
         {
-            var vehicles = _context.Vehicles.ToList(); // get data from DB
+            var vehicles = _context.Vehicles.Where(x => x.IsAvailable).ToList(); // get data from DB
             var sb = new StringBuilder();
 
             // Header
@@ -153,7 +166,7 @@ namespace SUPREA_LOGISTICS.Controllers
         [HttpGet]
         public IActionResult EditVehicle(string id)
         {
-            var vehicle = _context.Vehicles.FirstOrDefault(x => x.VehicleId.ToString() == id);
+            var vehicle = _context.Vehicles.FirstOrDefault(x => x.VehicleId.ToString() == id && x.IsAvailable);
             return View(vehicle);
         }
         //Edit Vehicle Data - Post
