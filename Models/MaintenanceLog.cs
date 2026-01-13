@@ -22,7 +22,8 @@ public partial class MaintenanceLog
     public decimal? Cost { get; set; }
 
     public DateTime? CreatedAt { get; set; }
-
+    public string? Remarks { get; set; }
+    
     [ValidateNever]
     public virtual Vehicle Vehicle { get; set; } = null!;
 }

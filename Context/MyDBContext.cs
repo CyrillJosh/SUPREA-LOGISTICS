@@ -44,6 +44,7 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.MaintenanceType).HasMaxLength(100);
             entity.Property(e => e.ServiceProvider).HasMaxLength(200);
+            entity.Property(e => e.Remarks).HasMaxLength(100);
             entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
 
             entity.HasOne(d => d.Vehicle).WithMany(p => p.MaintenanceLogs)
