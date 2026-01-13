@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace SUPREA_LOGISTICS.Models;
@@ -20,6 +21,6 @@ public partial class VehicleLog
     public int? OdometerEnd { get; set; }
 
     public DateTime? CreatedAt { get; set; }
-
+    [ValidateNever]
     public virtual Vehicle Vehicle { get; set; } = null!;
 }

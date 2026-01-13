@@ -1,0 +1,53 @@
+﻿@model SUPREA_LOGISTICS.Models.VehicleLog
+@{
+    ViewData["Title"] = "New Vehicle Log";
+}
+
+<h2>Create Vehicle Log</h2>
+
+<form asp-action="CreateVehicleLog" asp-controller="VehicleManagement" method="post" class="row g-3">
+
+    <!-- Vehicle Selector -->
+    <div class="col-md-12">
+        <label asp-for="VehicleId" class="form-label"></label>
+        <select asp-for="VehicleId" class="form-select">
+            <option value="">-- Select Vehicle --</option>
+            @foreach (var vehicle in ViewBag.Vehicles as List<SUPREA_LOGISTICS.Models.Vehicle>)
+            {
+                <option value="@vehicle.VehicleId">
+                    @($"{vehicle.VehicleId:0000} - {vehicle.UnitType} {vehicle.UnitModelSeries} ({vehicle.PlateNo})")
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="LogDate" class="form-label"></label>
+        <input asp-for="LogDate" type="date" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="DriverName" class="form-label"></label>
+        <input asp-for="DriverName" class="form-control" />
+    </div>
+
+    <div class="col-md-12">
+        <label asp-for="Purpose" class="form-label"></label>
+        <input asp-for="Purpose" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="OdometerStart" class="form-label"></label>
+        <input asp-for="OdometerStart" type="number" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="OdometerEnd" class="form-label"></label>
+        <input asp-for="OdometerEnd" type="number" class="form-control" />
+    </div>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Save Vehicle Log</button>
+        <a asp-action="Details" asp-controller="VehicleManagement" asp-route-id="@Model.VehicleId" class="btn btn-secondary ms-2">Cancel</a>
+    </div>
+</form>

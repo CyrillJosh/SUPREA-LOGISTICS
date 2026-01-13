@@ -179,7 +179,7 @@
 
 
         <div class="row">
-            @if (Model.VehiclePictures.Any())
+            @if (Model.VehiclePictures.Where(x => x.IsAvailable).Any())
             {
                 @foreach (var pic in Model.VehiclePictures.Where(x => x.IsAvailable))
                 {
@@ -234,10 +234,11 @@
                     <th>Maintenance ID</th>
                     <th>Date Issued</th>
                     <th>Maintenance Type</th>
-                    <th>Work Performed</th>
-                    <th>Supplier</th>
+                    <th>Details</th>
+                    <th>Service Provider</th>
                     <th>Cost</th>
-                    <th>Date Done</th>
+                    <th>Date Completed</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
@@ -247,12 +248,13 @@
                     {
                         <tr>
                             <td>@log.MaintenanceId</td>
-                            <td>@log.CreatedAt</td>
+                            <td>@(Convert.ToDateTime(log.CreatedAt).ToShortDateString())</td>
                             <td>@log.MaintenanceType</td>
                             <td>@log.Description</td>
                             <td>@log.ServiceProvider</td>
                             <td>@log.Cost</td>
                             <td>@log.MaintenanceDate.ToString("MM/dd/yyyy")</td>
+                            <td></td>
                         </tr>
 				    }
                 }
@@ -332,24 +334,30 @@
                 <th>Expiration</th>
                 <td>Action</td>
             </tr>
-            @if (Model.VehicleDocuments.Any())
+            @if (Model.VehicleDocuments.Where(x => x.IsAvailable).Any())
             {
-                @foreach (var doc in Model.VehicleDocuments)
+                @foreach (var doc in Model.VehicleDocuments.Where(x => x.IsAvailable))
                 {
+                    var isWord = doc.FileType.Contains("word");
                     <tr>
                         <td>@doc.DocumentType</td>
                         <td>@doc.FileName</td>
                         <td>@doc.ExpirationDate?.ToShortDateString()</td>
                         <td>
                             <a href="@Url.Action("DownloadDocument", "VehicleManagement", new { id = doc.DocumentId })"
-                               class="btn btn-sm btn-success" target="_blank">Download</a>
+                                class="btn btn-sm btn-success" target="_blank">Download</a>
 
-                            <button class="btn btn-sm btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#docModal"
-                                    data-bs-src="@Url.Action("ViewDocument", "VehicleManagement", new { id = doc.DocumentId })">
-                                Preview
-                            </button>
+                            @* Wrap the button in a span for tooltip if disabled *@
+                            <span data-bs-toggle="tooltip"
+                                    title="@(isWord ? "Preview not available for Word documents" : "Click to preview")">
+                                <button type="button"
+                                        class="btn btn-sm btn-primary @(isWord ? "disabled" : "")"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#docModal"
+                                        data-bs-src="@Url.Action("ViewDocument", "VehicleManagement", new { id = doc.DocumentId })">
+                                    Preview
+                                </button>
+                            </span>
                         </td>
                     </tr>
                 }

@@ -101,7 +101,7 @@ namespace SUPREA_LOGISTICS.Controllers
         [HttpGet]
         public IActionResult ViewDocument(int id)
         {
-            var doc = _context.VehicleDocuments.FirstOrDefault(d => d.DocumentId == id);
+            var doc = _context.VehicleDocuments.FirstOrDefault(d => d.DocumentId == id && d.IsAvailable);
             if (doc == null)
                 return NotFound();
 
@@ -142,6 +142,7 @@ namespace SUPREA_LOGISTICS.Controllers
                 FileData = ms.ToArray(),
                 ExpirationDate = expirationDate,
                 UploadedDate = DateTime.Now,
+                IsAvailable = true
             };
 
             _context.VehicleDocuments.Add(doc);
@@ -243,16 +244,30 @@ namespace SUPREA_LOGISTICS.Controllers
 
         //Create Vehicle Log
         [HttpGet]
-        public IActionResult CreateVehicleLog()
+        public IActionResult CreateVehicleLog(int vehicleId = 0)
         {
-            return View();
+            ViewBag.Vehicles = _context.Vehicles.Where(v => v.IsAvailable).ToList();
+
+            return View(new VehicleLog
+            {
+                VehicleId = vehicleId,
+            });
         }
         //Create Vehicle Log - Post
         [HttpPost]
         public async Task<IActionResult> CreateVehicleLog(VehicleLog vehicleLog)
         {
-            //Placeholder for future database create logic
-            return RedirectToAction("VehicleLog");
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Vehicles = _context.Vehicles.Where(v => v.IsAvailable).ToList();
+                return View(vehicleLog);
+            }
+
+            vehicleLog.CreatedAt = DateTime.Now;
+            _context.VehicleLogs.Add(vehicleLog);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "VehicleManagement", new { id = vehicleLog.VehicleId });
         }
         #endregion
 
