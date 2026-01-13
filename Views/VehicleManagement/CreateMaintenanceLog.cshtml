@@ -1,0 +1,57 @@
+﻿@model SUPREA_LOGISTICS.Models.MaintenanceLog
+@{
+    ViewData["Title"] = "New Maintenance Log";
+}
+
+<h2>Create New Maintenance Log</h2>
+
+<form asp-action="CreateMaintenanceLog"
+      asp-controller="VehicleManagement"
+      method="post"
+      class="row g-3">
+
+    <!-- Vehicle ID -->
+    <select asp-for="VehicleId" class="form-select">
+        <option value="">-- Select Vehicle --</option>
+        @foreach (var vehicle in ViewBag.Vehicles as List<SUPREA_LOGISTICS.Models.Vehicle>)
+        {
+            <option value="@vehicle.VehicleId">
+                @($"{vehicle.VehicleId:0000} - {vehicle.UnitType} {vehicle.UnitModelSeries} ({vehicle.PlateNo})")
+            </option>
+	    }
+	</select>
+
+    <div class="col-md-4">
+        <label asp-for="MaintenanceDate" class="form-label"></label>
+        <input asp-for="MaintenanceDate" type="date" class="form-control" />
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="MaintenanceType" class="form-label"></label>
+        <input asp-for="MaintenanceType" class="form-control" />
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="ServiceProvider" class="form-label"></label>
+        <input asp-for="ServiceProvider" class="form-control" />
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Cost" class="form-label"></label>
+        <input asp-for="Cost" type="number" step="0.01" class="form-control" />
+    </div>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Save Maintenance Log</button>
+        <a asp-action="Details"
+           asp-route-id="@Model.VehicleId"
+           class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </div>
+</form>

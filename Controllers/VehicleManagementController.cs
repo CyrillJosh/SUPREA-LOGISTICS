@@ -15,6 +15,7 @@ namespace SUPREA_LOGISTICS.Controllers
             _context = context;
         }
 
+        #region COMMON METHODS
         //View all vehicles
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -47,7 +48,9 @@ namespace SUPREA_LOGISTICS.Controllers
 
             return View(vehicle);
         }
+        #endregion
 
+        #region PICTURE METHODS
         [HttpGet]
         public IActionResult ViewPicture(int id)
         {
@@ -79,20 +82,22 @@ namespace SUPREA_LOGISTICS.Controllers
 
             return RedirectToAction("Details", new { id = vehicleId });
         }
-        //[HttpPost]
-        //public async Task<IActionResult> DeletePicture(int pictureId)
-        //{
-        //    var picture = await _context.VehiclePictures.FindAsync(pictureId);
-        //    if (picture == null)
-        //        return NotFound();
+        [HttpPost]
+        public async Task<IActionResult> DeletePicture(int pictureId)
+        {
+            var picture = await _context.VehiclePictures.FindAsync(pictureId);
+            if (picture == null)
+                return NotFound();
+            picture.IsAvailable = false;
 
-        //    _context.VehiclePictures.Remove(picture);
-        //    await _context.SaveChangesAsync();
+            _context.VehiclePictures.Update(picture);
+            await _context.SaveChangesAsync();
 
-        //    // Redirect back to vehicle details
-        //    return RedirectToAction("Details", new { id = picture.VehicleId });
-        //}
+            return RedirectToAction("Details", new { id = picture.VehicleId });
+        }
+        #endregion
 
+        #region DOCUMENT METHODS
         [HttpGet]
         public IActionResult ViewDocument(int id)
         {
@@ -144,24 +149,22 @@ namespace SUPREA_LOGISTICS.Controllers
 
             return RedirectToAction("Details", new { id = vehicleId });
         }
-        public IActionResult Export()
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDocument(int documentId)
         {
-            var vehicles = _context.Vehicles.Where(x => x.IsAvailable).ToList(); // get data from DB
-            var sb = new StringBuilder();
+            var doc = await _context.VehicleDocuments.FindAsync(documentId);
+            if (doc == null) return NotFound();
 
-            // Header
-            sb.AppendLine("VehicleID,Unit Type,Unit Model Series,Brandmake,Year Model, Engine No.,Chassis No., Plate No.,ORCR, Expiration Date, Insurance, Insurance Coverage, Insurance Provider, Date Aquired, Supplier, ProjectID, Site Location, Vehicle Status");
+            doc.IsAvailable = false;
+            _context.VehicleDocuments.Update(doc);
+            await _context.SaveChangesAsync();
 
-            // Rows
-            foreach (var v in vehicles)
-            {
-                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.UnitModelSeries},{v.BrandMake},{v.YearModel},{v.EngineNo},{v.ChassisNo},{v.PlateNo},{v.Orcr},{v.ExpirationDate},{v.Insurance},{v.InsuranceCoverage},{v.InsuranceProvider},{v.DateAcquired},{v.Supplier},{v.ProjectId},{v.SiteLocation},{v.VehicleStatus}");
-            }
-
-            return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "vehicles.csv");
+            return RedirectToAction("Details", new { id = doc.VehicleId });
         }
+        #endregion
 
-
+        #region VEHICLE MANIPULATION METHODS
         //Edit Vehicle Data
         [HttpGet]
         public IActionResult EditVehicle(string id)
@@ -207,7 +210,29 @@ namespace SUPREA_LOGISTICS.Controllers
             //Placeholder for future database create logic
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region EXPORT METHOD
+        public IActionResult Export()
+        {
+            var vehicles = _context.Vehicles.Where(x => x.IsAvailable).ToList(); // get data from DB
+            var sb = new StringBuilder();
+
+            // Header
+            sb.AppendLine("VehicleID,Unit Type,Unit Model Series,Brandmake,Year Model, Engine No.,Chassis No., Plate No.,ORCR, Expiration Date, Insurance, Insurance Coverage, Insurance Provider, Date Aquired, Supplier, ProjectID, Site Location, Vehicle Status");
+
+            // Rows
+            foreach (var v in vehicles)
+            {
+                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.UnitModelSeries},{v.BrandMake},{v.YearModel},{v.EngineNo},{v.ChassisNo},{v.PlateNo},{v.Orcr},{v.ExpirationDate},{v.Insurance},{v.InsuranceCoverage},{v.InsuranceProvider},{v.DateAcquired},{v.Supplier},{v.ProjectId},{v.SiteLocation},{v.VehicleStatus}");
+            }
+
+            return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "vehicles.csv");
+        }
+
+        #endregion
+
+        #region VEHICLE LOGS
         //Vehicle Logs
         //Tobe added database
         [HttpGet]
@@ -229,27 +254,53 @@ namespace SUPREA_LOGISTICS.Controllers
             //Placeholder for future database create logic
             return RedirectToAction("VehicleLog");
         }
+        #endregion
 
+        #region MAINTENANCE LOGS
         //Maintenace Logs
-        //Tobe added database
         [HttpGet]
         public async Task<IActionResult> MaintenaceLog()
         {
-            return View();
+            var logs = _context.MaintenanceLogs
+                .Include(x => x.Vehicle)
+                .Where(x => x.Vehicle.IsAvailable)
+                .ToList();
+            return View(logs);
         }
 
         //Create Maintenance Log
         [HttpGet]
-        public IActionResult CreateMaintenanceLog()
+        public IActionResult CreateMaintenanceLog(int vehicleId = 0)
         {
-            return View();
+            ViewBag.Vehicles = _context.Vehicles
+                .Where(v => v.IsAvailable)
+                .OrderBy(v => v.VehicleId)
+                .ToList();
+
+            return View(new MaintenanceLog
+            {
+                VehicleId = vehicleId,
+                MaintenanceDate = DateOnly.FromDateTime(DateTime.Today)
+            });
         }
+
+
+
         //Create Maintenance Log - Post
         [HttpPost]
-        public async Task<IActionResult> CreateMaintenanceLog(MaintenanceLog maintenanceLog)
+        public async Task<IActionResult> CreateMaintenanceLog(MaintenanceLog log)
         {
-            //Placeholder for future database create logic
-            return RedirectToAction("MaintenaceLog");
+            if (!ModelState.IsValid)
+                return View(log);
+
+            log.CreatedAt = DateTime.Now;
+
+            _context.MaintenanceLogs.Add(log);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = log.VehicleId });
         }
+
+        #endregion
     }
 }

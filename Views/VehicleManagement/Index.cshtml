@@ -52,7 +52,7 @@
                     <td>@v.EngineNo</td>
                     <td>@v.ChassisNo</td>
                     <td>@v.PlateNo</td>
-                    <td>@v.Orcr</td>
+                    <td>@((bool)v.Orcr?"Available": "Not Available")</td>
                     <td>@v.ExpirationDate</td>
                     <td>@v.Insurance</td>
                     <td>@v.InsuranceCoverage</td>
