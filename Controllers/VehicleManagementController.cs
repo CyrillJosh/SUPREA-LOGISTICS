@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SUPREA_LOGISTICS.Context;
 using SUPREA_LOGISTICS.Models;
+using SUPREA_LOGISTICS.ViewModels;
 using System.Text;
 
 namespace SUPREA_LOGISTICS.Controllers
@@ -21,7 +22,7 @@ namespace SUPREA_LOGISTICS.Controllers
         public async Task<IActionResult> Index()
         {
             //Database
-            var vehicles = _context.Vehicles.Where(x => x.IsAvailable).ToList();
+            var vehicles = _context.Vehicles.Include(x => x.VehicleDocuments).Where(x => x.IsAvailable).ToList();
 
             return View(vehicles);
         }
@@ -233,17 +234,32 @@ namespace SUPREA_LOGISTICS.Controllers
             if (vm.VehicleDocuments != null)
             {
                 for (int i = 0; i < vm.VehicleDocuments.Count; i++)
-        {
-            if(!ModelState.IsValid)
-            {
-                return View(vehicle);
+                {
+                    var file = vm.VehicleDocuments[i];
+                    var type = vm.DocumentTypes != null && i < vm.DocumentTypes.Count ? vm.DocumentTypes[i] : "Other";
+                    var expDate = vm.DocumentExpirationDates != null && i < vm.DocumentExpirationDates.Count ? vm.DocumentExpirationDates[i] : null;
+
+                    using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+
+                    _context.VehicleDocuments.Add(new VehicleDocument
+                    {
+                        VehicleId = vehicleId,
+                        FileName = file.FileName,
+                        FileType = file.ContentType,
+                        FileData = ms.ToArray(),
+                        DocumentType = type,
+                        ExpirationDate = DateOnly.Parse(expDate.ToString()),
+                        IsAvailable = true
+                    });
+                }
             }
-            _context.Vehicles.Add(vehicle);
+
             await _context.SaveChangesAsync();
 
-            //Placeholder for future database create logic
             return RedirectToAction("Index");
         }
+
         #endregion
 
         #region EXPORT METHOD
@@ -307,7 +323,7 @@ namespace SUPREA_LOGISTICS.Controllers
         #region MAINTENANCE LOGS
         //Maintenace Logs
         [HttpGet]
-        public async Task<IActionResult> MaintenaceLog()
+        public async Task<IActionResult> MaintenanceLogs()
         {
             var logs = _context.MaintenanceLogs
                 .Include(x => x.Vehicle)

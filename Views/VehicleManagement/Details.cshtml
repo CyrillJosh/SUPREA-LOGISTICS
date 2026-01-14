@@ -116,7 +116,18 @@
                     </tr>
                     <tr>
                         <td>OR / CR</td>
-                        <td>@((bool)Model.Orcr?"Available": "Not Available")</td>
+                        <td>
+                                @if (Model.VehicleDocuments.Any(x => x.DocumentType == "OR/CR"))
+                                {
+                                    <a asp-controller="VehicleManagement" asp-action="DownloadDocument" asp-route-id="@Model.VehicleDocuments.FirstOrDefault(x => x.FileType == "OR/CR")?.DocumentId" class="text-decoration-none">
+                                        @Model.VehicleDocuments.FirstOrDefault(x => x.FileType == "OR/CR")?.FileName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span>N/A</span>
+                                }
+                        </td>
                     </tr>
                     <tr>
                         <td>Expiration</td>
@@ -565,13 +576,7 @@
                 $("#content > div[id='" + id + "']").removeClass("visually-hidden");
             });
         })
-        const imageModal = document.getElementById('imageModal')
-        imageModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget
-            const src = button.getAttribute('data-bs-src')
-            const modalImg = imageModal.querySelector('#modalImage')
-            modalImg.src = src
-        })
+
         var docModal = document.getElementById('docModal');
         docModal.addEventListener('show.bs.modal', function (event) {
             var btn = event.relatedTarget;

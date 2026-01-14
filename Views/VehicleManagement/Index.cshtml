@@ -18,7 +18,7 @@
 </div>
 <div class="card overflow-auto">
     <table class="table table-bordered table-hover">
-        <thead class="text-primary">
+        <thead class="table-info">
             <tr>
                 <th>Vehicle Id</th>
                 <th>Unit Type</th>
@@ -52,7 +52,18 @@
                     <td>@v.EngineNo</td>
                     <td>@v.ChassisNo</td>
                     <td>@v.PlateNo</td>
-                    <td>@((bool)v.Orcr?"Available": "Not Available")</td>
+                    <td>
+                        @if (v.VehicleDocuments.Any(x => x.DocumentType == "OR/CR"))
+                        {
+                            <a asp-controller="VehicleManagement" asp-action="DownloadDocument" asp-route-id="@v.VehicleDocuments.FirstOrDefault(x => x.FileType == "OR/CR")??.DocumentId" class="text-decoration-none">
+                                @v.VehicleDocuments.FirstOrDefault(x => x.FileType.ToLower().Contains("or/cr"))?.FileName
+                            </a>
+                        }
+                        else
+                        {
+                            <span>N/A</span>
+                        }
+                    </td>
                     <td>@v.ExpirationDate</td>
                     <td>@v.Insurance</td>
                     <td>@v.InsuranceCoverage</td>

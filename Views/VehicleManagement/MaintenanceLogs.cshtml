@@ -1,0 +1,68 @@
+﻿@model IEnumerable<SUPREA_LOGISTICS.Models.MaintenanceLog>
+
+@{
+    ViewData["Title"] = "Maintenance Logs";
+}
+
+<h2 class="mb-3">Maintenance Logs</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Maintenance ID</th>
+            <th>Vehicle Plate No.</th>
+            <th>Date Issued</th>
+            <th>Maintenance Type</th>
+            <th>Details</th>
+            <th>Service Provider</th>
+            <th>Cost</th>
+            <th>Date Completed</th>
+            <th>Remarks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var log in Model)
+            {
+                <tr>
+                    <td>
+						@log.MaintenanceId.ToString("0000")
+                    </td>
+                    <td>
+                        @log.Vehicle?.PlateNo
+                    </td>
+                    <td>
+                        @log.CreatedAt?.ToString("MMMM dd, yyyy")
+                    </td>
+                    <td>
+                        @log.MaintenanceType
+                    </td>
+                    <td>
+                        @log.Description
+                    </td>
+                    <td>
+                        @log.ServiceProvider
+                    </td>
+                    <td>
+                        @(log.Cost.HasValue? log.Cost.Value.ToString("N2") : "-")
+                    </td>
+                    <td>
+                        @log.MaintenanceDate.ToString("yyyy-MM-dd")
+                    </td>
+                    <td>
+                        @log.Remarks
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center text-muted">
+                    No maintenance logs found.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
