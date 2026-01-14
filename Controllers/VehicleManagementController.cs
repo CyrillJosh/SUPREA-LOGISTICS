@@ -199,7 +199,40 @@ namespace SUPREA_LOGISTICS.Controllers
         }
         //Create new vehicle data - Post
         [HttpPost]
-        public async Task<IActionResult> CreateVehicle(Vehicle vehicle)
+        public async Task<IActionResult> CreateVehicle(VehicleFormViewModel vm)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            // Save vehicle first
+            _context.Vehicles.Add(vm.Vehicle);
+            await _context.SaveChangesAsync();
+
+            int vehicleId = vm.Vehicle.VehicleId;
+
+            // Save pictures
+            if (vm.VehiclePictures != null)
+            {
+                foreach (var file in vm.VehiclePictures)
+                {
+                    using var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+
+                    _context.VehiclePictures.Add(new VehiclePicture
+                    {
+                        VehicleId = vehicleId,
+                        FileName = file.FileName,
+                        FileData = ms.ToArray(),
+                        FileType = file.ContentType,
+                        IsAvailable = true
+                    });
+                }
+            }
+
+            // Save documents
+            if (vm.VehicleDocuments != null)
+            {
+                for (int i = 0; i < vm.VehicleDocuments.Count; i++)
         {
             if(!ModelState.IsValid)
             {
