@@ -36,16 +36,6 @@
         <input asp-for="Purpose" class="form-control" />
     </div>
 
-    <div class="col-md-6">
-        <label asp-for="OdometerStart" class="form-label"></label>
-        <input asp-for="OdometerStart" type="number" class="form-control" />
-    </div>
-
-    <div class="col-md-6">
-        <label asp-for="OdometerEnd" class="form-label"></label>
-        <input asp-for="OdometerEnd" type="number" class="form-control" />
-    </div>
-
     <div class="col-12 mt-3">
         <button type="submit" class="btn btn-primary">Save Vehicle Log</button>
         <a asp-action="Details" asp-controller="VehicleManagement" asp-route-id="@Model.VehicleId" class="btn btn-secondary ms-2">Cancel</a>

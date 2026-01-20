@@ -29,7 +29,7 @@
             <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
                 <a class="fa-solid fa-plus text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">New MaintenanceLog</a></li>
+                    <li><a class="dropdown-item" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId">New MaintenanceLog</a></li>
                     <li><a class="dropdown-item" href="#">New VehicleLog</a></li>
                     <li><a class="dropdown-item" asp-action="CreateVehicle">New Vehicle</a></li>
                 </ul>
@@ -59,7 +59,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" id="4">Vehicle Log</a>
-        </li>
+        </li> 
         <li class="nav-item">
             <a class="nav-link" id="5">Documents</a>
         </li>
@@ -234,12 +234,12 @@
         <div class="w-100 d-flex justify-content-between">
             <h4>Maintenance Logs</h4>
             <div class="d-flex flex-coloumn g-2">
-                <a class="btn border-0 m-0 p-0" asp-action="CreateMaintenanceLog" asp-route-vehicleId="@Model.VehicleId">
+                <a class="btn border-0 m-0 p-0" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId">
                     <i class="fa-plus h4 m-0 p-0"></i>
                 </a>
             </div>
         </div>
-        <table class="table table-bordered w-100">
+        <table class="table table-bordered table-hover w-100" id="MaintenanceTable">
             <thead>
                 <tr>
                     <th>Maintenance ID</th>
@@ -257,7 +257,7 @@
                 {
                     @foreach(var log in Model.MaintenanceLogs)
                     {
-                        <tr>
+                        <tr id="@log.MaintenanceId">
                             <td>@log.MaintenanceId</td>
                             <td>@(Convert.ToDateTime(log.CreatedAt).ToShortDateString())</td>
                             <td>@log.MaintenanceType</td>
@@ -272,7 +272,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="7" class="text-center">No maintenance logs available.</td>
+                        <td colspan="8" class="text-center">No maintenance logs available.</td>
                     </tr>
 				}
             </tbody>
@@ -296,9 +296,7 @@
                     <th>Date</th>
                     <th>Driver Name</th>
                     <th>Purpose of Trip</th>
-                    <th>Start Odometer</th>
-                    <th>End Odometer</th>
-                    <th>Distance Traveled</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
@@ -310,16 +308,14 @@
                             <td>@log.LogDate.ToString("yyyy-MM-dd")</td>
                             <td>@log.DriverName</td>
                             <td>@log.Purpose</td>
-                            <td>@log.OdometerStart</td>
-                            <td>@log.OdometerEnd</td>
-                            <td>@(log.OdometerEnd - log.OdometerStart)</td>
+                            <td>@* @log.Remarks *@</td>
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="7" class="text-center">No vehicle logs available.</td>
+                        <td colspan="8" class="text-center">No vehicle logs available.</td>
 					</tr>
                 }
             </tbody>
@@ -520,6 +516,13 @@
                 const imageModal = document.getElementById("imageModal");
                 const modalImage = document.getElementById("modalImage");
                 const removeBtn = document.getElementById("remove");
+
+                $('#MaintenanceTable tr').on("click", function() {
+                    $('tbody tr').removeClass('table-active');
+                    $(this).addClass('table-active');
+                    const id = this.id;
+                    window.location.href = `/MaintenanceLog/EditMaintenanceLog/${id}`;
+                });
 
                 imageModal.addEventListener("show.bs.modal", function (event) {
                     const trigger = event.relatedTarget;

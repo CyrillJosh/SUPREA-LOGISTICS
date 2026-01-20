@@ -16,10 +16,6 @@ public partial class VehicleLog
 
     public string? Purpose { get; set; }
 
-    public int? OdometerStart { get; set; }
-
-    public int? OdometerEnd { get; set; }
-
     public DateTime? CreatedAt { get; set; }
     [ValidateNever]
     public virtual Vehicle Vehicle { get; set; } = null!;

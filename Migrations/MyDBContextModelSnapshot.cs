@@ -235,12 +235,6 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.Property<DateOnly>("LogDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("OdometerEnd")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OdometerStart")
-                        .HasColumnType("int");
-
                     b.Property<string>("Purpose")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");

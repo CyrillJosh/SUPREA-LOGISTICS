@@ -1,0 +1,85 @@
+﻿@model SUPREA_LOGISTICS.Models.MaintenanceLog
+
+@{
+    ViewData["Title"] = "Edit Maintenance Log";
+}
+
+<h2 class="text-primary mb-3">@ViewData["Title"]</h2>
+
+<form asp-action="EditMaintenanceLog"
+      asp-controller="VehicleManagement"
+      method="post"
+      class="row g-3">
+
+    <input type="hidden" asp-for="MaintenanceId" />
+
+    <!-- Vehicle -->
+    <div class="col-md-12">
+        <label asp-for="VehicleId" class="form-label">Vehicle</label>
+        <select asp-for="VehicleId"
+                class="form-select"
+                required>
+            <option value="">-- Select Vehicle --</option>
+            @foreach (var v in ViewBag.Vehicles)
+            {
+                <option value="@v.VehicleId"
+                        selected="@(Model.VehicleId == v.VehicleId)">
+                    @v.Display
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- Date -->
+    <div class="col-md-6">
+        <label asp-for="MaintenanceDate" class="form-label">Maintenance Date</label>
+        <input asp-for="MaintenanceDate" type="date" class="form-control" required />
+    </div>
+
+    <!-- Type -->
+    <div class="col-md-6">
+        <label asp-for="MaintenanceType" class="form-label">Type</label>
+        <select asp-for="MaintenanceType" class="form-select" required>
+            <option value="">-- Select Maintenance Type --</option>
+            <option value="Preventive" selected="@(Model.MaintenanceType == "Preventive")">Preventive</option>
+            <option value="Corrective" selected="@(Model.MaintenanceType == "Corrective")">Corrective</option>
+        </select>
+    </div>
+
+    <!-- Description -->
+    <div class="col-12">
+        <label asp-for="Description" class="form-label">Details</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <!-- Provider -->
+    <div class="col-md-6">
+        <label asp-for="ServiceProvider" class="form-label">Service Provider</label>
+        <input asp-for="ServiceProvider" class="form-control" />
+    </div>
+
+    <!-- Cost -->
+    <div class="col-md-6">
+        <label asp-for="Cost" class="form-label">Cost</label>
+        <input asp-for="Cost" type="number" step="0.01" min="0" class="form-control" />
+    </div>
+
+    <!-- Remarks -->
+    <div class="col-12">
+        <label asp-for="Remarks" class="form-label">Remarks</label>
+        <input asp-for="Remarks" class="form-control" />
+    </div>
+
+    <!-- Actions -->
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">
+           Update Maintenance Log
+        </button>
+
+        <a asp-action="MaintenaceLogs"
+           asp-controller="VehicleManagement"
+           class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </div>
+</form>

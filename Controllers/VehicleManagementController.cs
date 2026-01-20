@@ -260,7 +260,7 @@ namespace SUPREA_LOGISTICS.Controllers
             return RedirectToAction("Index");
         }
 
-        #endregion
+        #endregion  
 
         #region EXPORT METHOD
         public IActionResult Export()
@@ -278,91 +278,6 @@ namespace SUPREA_LOGISTICS.Controllers
             }
 
             return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "vehicles.csv");
-        }
-
-        #endregion
-
-        #region VEHICLE LOGS
-        //Vehicle Logs
-        //Tobe added database
-        [HttpGet]
-        public async Task<IActionResult> VehicleLog()
-        {
-            return View();
-        }
-
-        //Create Vehicle Log
-        [HttpGet]
-        public IActionResult CreateVehicleLog(int vehicleId = 0)
-        {
-            ViewBag.Vehicles = _context.Vehicles.Where(v => v.IsAvailable).ToList();
-
-            return View(new VehicleLog
-            {
-                VehicleId = vehicleId,
-            });
-        }
-        //Create Vehicle Log - Post
-        [HttpPost]
-        public async Task<IActionResult> CreateVehicleLog(VehicleLog vehicleLog)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Vehicles = _context.Vehicles.Where(v => v.IsAvailable).ToList();
-                return View(vehicleLog);
-            }
-
-            vehicleLog.CreatedAt = DateTime.Now;
-            _context.VehicleLogs.Add(vehicleLog);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", "VehicleManagement", new { id = vehicleLog.VehicleId });
-        }
-        #endregion
-
-        #region MAINTENANCE LOGS
-        //Maintenace Logs
-        [HttpGet]
-        public async Task<IActionResult> MaintenanceLogs()
-        {
-            var logs = _context.MaintenanceLogs
-                .Include(x => x.Vehicle)
-                .Where(x => x.Vehicle.IsAvailable)
-                .ToList();
-            return View(logs);
-        }
-
-        //Create Maintenance Log
-        [HttpGet]
-        public IActionResult CreateMaintenanceLog(int vehicleId = 0)
-        {
-            ViewBag.Vehicles = _context.Vehicles
-                .Where(v => v.IsAvailable)
-                .OrderBy(v => v.VehicleId)
-                .ToList();
-
-            return View(new MaintenanceLog
-            {
-                VehicleId = vehicleId,
-                MaintenanceDate = DateOnly.FromDateTime(DateTime.Today)
-            });
-        }
-
-
-
-        //Create Maintenance Log - Post
-        [HttpPost]
-        public async Task<IActionResult> CreateMaintenanceLog(MaintenanceLog log)
-        {
-            if (!ModelState.IsValid)
-                return View(log);
-
-            log.CreatedAt = DateTime.Now;
-
-            _context.MaintenanceLogs.Add(log);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", new { id = log.VehicleId });
         }
 
         #endregion

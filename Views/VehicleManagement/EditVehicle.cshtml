@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Create Vehicle";
+    ViewData["Title"] = "Edit Vehicle";
 }
 @model Vehicle
 
@@ -8,6 +8,7 @@
 <form asp-action="EditVehicle" method="post" class="row g-3" data="@Model">
     <!--HIDDEN VALUES-->
     <input asp-for="VehicleId" hidden />
+    <input asp-for="IsAvailable" hidden />
     <!-- General Information -->
     <div class="col-12 col-md-6 col-lg-4">
         <h4 class="border-bottom pb-1 mb-3">General Information</h4>
@@ -39,7 +40,11 @@
 
         <div class="mb-2">
             <label for="VehicleStatus" class="form-label">Vehicle Status</label>
-            <input asp-for="VehicleStatus" class="form-control" value="@(Model.VehicleStatus?? "OK")" />
+            <select asp-for="VehicleStatus" class="form-select">
+                <option value="">-- Select Status Type --</option>
+                <option value="Available">Available</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
         </div>
     </div>
 
