@@ -15,6 +15,7 @@ public partial class MyDBContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<Driver> Drivers { get; set; }
 
     public virtual DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
 
@@ -32,6 +33,12 @@ public partial class MyDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Vehicle>()
+            .HasOne(v => v.DriverInCharge)
+            .WithMany(d => d.Vehicles)
+            .HasForeignKey(v => v.DriverInChargeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<MaintenanceLog>(entity =>
         {
             entity.HasKey(e => e.MaintenanceId).HasName("PK__Maintena__E60542B5904092F4");

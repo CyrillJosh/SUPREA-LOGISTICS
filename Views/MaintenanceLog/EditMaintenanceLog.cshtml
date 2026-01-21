@@ -76,10 +76,20 @@
            Update Maintenance Log
         </button>
 
-        <a asp-action="MaintenaceLogs"
-           asp-controller="VehicleManagement"
-           class="btn btn-secondary ms-2">
-            Cancel
-        </a>
+        @if(Model.VehicleId != 0)
+        {
+            <a href="@Url.Action("Details","VehicleManagement",new{id = Model.VehicleId})#Maintenance"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+        }
+        else
+        {
+            <a asp-action="MaintenaceLogs"
+               asp-controller="VehicleManagement"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+		}
     </div>
 </form>

@@ -1,21 +1,25 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using SUPREA_LOGISTICS.Context;
 using SUPREA_LOGISTICS.Models;
 
 namespace SUPREA_LOGISTICS.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly MyDBContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MyDBContext context)
         {
+            _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var vehicles = _context.Vehicles.ToList();
+            return View(vehicles);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,11 +1,16 @@
-﻿@{
+﻿@using SUPREA_LOGISTICS.ViewModels
+@{
 	ViewData["Title"] = "Create Vehicle";
 }
-@model Vehicle
+@model VehicleFormViewModel
 
 <h2 class="text-primary mb-4">@ViewData["Title"]</h2>
 
-<form asp-action="CreateVehicle" method="post" class="row g-3">
+<form asp-action="CreateVehicle"
+      method="post"
+      enctype="multipart/form-data"
+      class="row g-3">
+
 
     <!-- General Information -->
     <div class="col-12 col-md-6 col-lg-4">
@@ -13,32 +18,32 @@
 
         <div class="mb-2">
             <label for="UnitType" class="form-label">Unit Type</label>
-            <input asp-for="UnitType" class="form-control" required/>
+            <input asp-for="Vehicle.UnitType" class="form-control" required/>
         </div>
 
         <div class="mb-2">
             <label for="UnitModelSeries" class="form-label">Unit Model / Series</label>
-            <input asp-for="UnitModelSeries" class="form-control" required/>
+            <input asp-for="Vehicle.UnitModelSeries" class="form-control" required />
         </div>
 
         <div class="mb-2">
             <label for="BrandMake" class="form-label">Brand / Make</label>
-            <input asp-for="BrandMake" class="form-control" required />
+            <input asp-for="Vehicle.BrandMake" class="form-control" required />
         </div>
 
         <div class="mb-2">
             <label for="YearModel" class="form-label">Year Model</label>
-            <input asp-for="YearModel" class="form-control" type="number" required />
+            <input asp-for="Vehicle.YearModel" class="form-control" type="number" required />
         </div>
 
         <div class="mb-2">
             <label for="PlateNo" class="form-label">Plate No.</label>
-            <input asp-for="PlateNo" class="form-control" />
+            <input asp-for="Vehicle.PlateNo" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="VehicleStatus" class="form-label">Vehicle Status</label>
-            <input asp-for="VehicleStatus" class="form-control" value="OK"/>
+            <input asp-for="Vehicle.VehicleStatus" class="form-control" value="OK" />
         </div>
     </div>
 
@@ -48,22 +53,22 @@
 
         <div class="mb-2">
             <label for="EngineNo" class="form-label">Engine No.</label>
-            <input asp-for="EngineNo" class="form-control" required />
+            <input asp-for="Vehicle.EngineNo" class="form-control" required />
         </div>
 
         <div class="mb-2">
             <label for="ChasisNo" class="form-label">Chasis No.</label>
-            <input asp-for="ChassisNo" class="form-control" required />
+            <input asp-for="Vehicle.ChassisNo" class="form-control" required />
         </div>
 
         <div class="mb-2">
             <label for="OrCr" class="form-label">OR / CR</label>
-            <input asp-for="Orcr" class="form-control" />
+            <input asp-for="Vehicle.Orcr" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="Expiration" class="form-label">Expiration</label>
-            <input asp-for="ExpirationDate" class="form-control" type="date" required />
+            <input asp-for="Vehicle.ExpirationDate" class="form-control" type="date" />
         </div>
     </div>
 
@@ -73,44 +78,122 @@
 
         <div class="mb-2">
             <label for="Insurance" class="form-label">Insurance</label>
-            <input asp-for="Insurance" class="form-control" />
+            <input asp-for="Vehicle.Insurance" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="InsuranceCoverage" class="form-label">Insurance Coverage</label>
-            <input asp-for="InsuranceCoverage" class="form-control" />
+            <input asp-for="Vehicle.InsuranceCoverage" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="InsuranceProvider" class="form-label">Insurance Provider</label>
-            <input asp-for="InsuranceProvider" class="form-control" />
+            <input asp-for="Vehicle.InsuranceProvider" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="DateAcquired" class="form-label">Date Acquired</label>
-            <input asp-for="DateAcquired" class="form-control" type="date" />
+            <input asp-for="Vehicle.DateAcquired" class="form-control" type="date" />
         </div>
 
         <div class="mb-2">
             <label for="Supplier" class="form-label">Supplier</label>
-            <input asp-for="Supplier" class="form-control" />
+            <input asp-for="Vehicle.Supplier" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="ProjectId" class="form-label">Project ID</label>
-            <input asp-for="ProjectId" class="form-control" />
+            <input asp-for="Vehicle.ProjectId" class="form-control" />
         </div>
 
         <div class="mb-2">
             <label for="SiteLocation" class="form-label">Site Location</label>
-            <input asp-for="SiteLocation" class="form-control" />
+            <input asp-for="Vehicle.SiteLocation" class="form-control" />
         </div>
     </div>
+    <!-- Vehicle Pictures -->
+    <div class="col-12">
+        <h4 class="border-bottom pb-1 mb-3">Vehicle Pictures</h4>
 
-    <div class="col-12 mt-3">
+        <input type="file"
+               name="VehiclePictures"
+               class="form-control"
+               multiple
+               accept="image/*" />
+
+    </div>
+    <!-- Vehicle Documents -->
+    <div class="col-12">
+        <h4 class="border-bottom pb-1 mb-3">Vehicle Documents</h4>
+
+        <div id="documents-wrapper">
+            <div class="row g-2 mb-2 document-row">
+                <div class="col-md-4">
+                    <input type="file"
+                           name="VehicleDocuments"
+                           class="form-control"
+                           accept=".pdf,.jpg,.jpeg,.png,.docx" />
+
+                </div>
+
+                <div class="col-md-4">
+                    <select name="DocumentTypes" class="form-select">
+                        <option value="OR/CR">OR / CR</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Registration">Registration</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <input type="date"
+                           name="DocumentExpirationDates"
+                           class="form-control" />
+                </div>
+                <div class="col-md-12 text-end">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="removeDocumentRow(this)">
+                        Remove
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="button"
+                class="btn btn-sm btn-outline-primary mt-2"
+                onclick="addDocumentRow()">
+            + Add another document
+        </button>
+    </div>
+
+    <div class="col-12 mt-5">
         <button type="submit" class="btn btn-primary">Save Vehicle</button>
         <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
     </div>
-
 </form>
+
+@section Scripts {
+    <script>
+        function addDocumentRow() {
+            const wrapper = document.getElementById("documents-wrapper");
+            const row = wrapper.querySelector(".document-row").cloneNode(true);
+
+            row.querySelectorAll("input").forEach(i => i.value = "");
+            row.querySelector("select").selectedIndex = 0;
+
+            wrapper.appendChild(row);
+        }
+        function removeDocumentRow(btn) {
+            const wrapper = document.getElementById("documents-wrapper");
+            const rows = wrapper.querySelectorAll(".document-row");
+
+            if (rows.length > 1) {
+                btn.closest(".document-row").remove();
+            }
+        }
+
+    </script>
+}
 

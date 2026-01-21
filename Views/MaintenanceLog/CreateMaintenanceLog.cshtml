@@ -61,11 +61,20 @@
 
     <div class="col-12 mt-3">
         <button type="submit" class="btn btn-primary">Save Maintenance Log</button>
-        <a asp-action="Details"
-           asp-controller="VehicleManagement"
-           asp-route-id="@Model.VehicleId"
-           class="btn btn-secondary ms-2">
-            Cancel
-        </a>
+        @if (Model.VehicleId != 0)
+        {
+            <a href="@Url.Action("Details", "VehicleManagement", new { id = Model.VehicleId })#Maintenance"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+        }
+        else
+        {
+            <a asp-action="Index"
+               asp-controller="MaintenanceLog"
+               class="btn btn-secondary ms-2">
+                Cancel
+            </a>
+        }
     </div>
 </form>

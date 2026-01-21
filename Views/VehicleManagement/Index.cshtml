@@ -37,6 +37,7 @@
                 <th>Supplier</th>
                 <th>Project Id</th>
                 <th>Site Location</th>
+                <th>Current Driver</th>
                 <th>Vehicle Status</th>
             </tr>
         </thead>
@@ -53,10 +54,16 @@
                     <td>@v.ChassisNo</td>
                     <td>@v.PlateNo</td>
                     <td>
-                        @if (v.VehicleDocuments.Any(x => x.DocumentType == "OR/CR"))
+                        @{
+                            var orcr = v.VehicleDocuments
+                            .FirstOrDefault(x => x.DocumentType == "OR/CR" && x.IsAvailable);
+                        }
+
+                        @if (orcr != null)
                         {
-                            <a asp-controller="VehicleManagement" asp-action="DownloadDocument" asp-route-id="@v.VehicleDocuments.FirstOrDefault(x => x.FileType == "OR/CR")??.DocumentId" class="text-decoration-none">
-                                @v.VehicleDocuments.FirstOrDefault(x => x.FileType.ToLower().Contains("or/cr"))?.FileName
+                            <a href="@Url.Action("Details", "VehicleManagement", new { id = v.VehicleId })#Documents"
+                               class="text-decoration-none">
+                                @orcr.FileName
                             </a>
                         }
                         else
@@ -64,6 +71,7 @@
                             <span>N/A</span>
                         }
                     </td>
+
                     <td>@v.ExpirationDate</td>
                     <td>@v.Insurance</td>
                     <td>@v.InsuranceCoverage</td>
@@ -72,6 +80,7 @@
                     <td>@v.Supplier</td>
                     <td>@v.ProjectId</td>
                     <td>@v.SiteLocation</td>
+                    <td>@v.DriverInCharge?.FullName</td>
                     <td>@v.VehicleStatus</td>
                 </tr>
             }

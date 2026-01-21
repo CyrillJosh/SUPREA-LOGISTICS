@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SUPREA_LOGISTICS.Context;
 using SUPREA_LOGISTICS.Models;
@@ -22,7 +23,10 @@ namespace SUPREA_LOGISTICS.Controllers
         public async Task<IActionResult> Index()
         {
             //Database
-            var vehicles = _context.Vehicles.Include(x => x.VehicleDocuments).Where(x => x.IsAvailable).ToList();
+            var vehicles = _context.Vehicles
+                .Include(x => x.VehicleDocuments)
+                .Include(x => x.DriverInCharge)
+                .Where(x => x.IsAvailable).ToList();
 
             return View(vehicles);
         }
@@ -38,6 +42,7 @@ namespace SUPREA_LOGISTICS.Controllers
             }
             var vehicle = _context.Vehicles
                 .Include(x => x.VehiclePictures)
+                .Include(x => x.DriverInCharge)
                 .Include(x => x.VehicleDocuments)
                 .Include(x => x.MaintenanceLogs)
                 .FirstOrDefault(x => x.VehicleId == id);
@@ -81,7 +86,7 @@ namespace SUPREA_LOGISTICS.Controllers
             _context.VehiclePictures.Add(picture);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = vehicleId });
+            return Redirect(Url.Action("Details", new { id = vehicleId }) + "#Pictures");
         }
         [HttpPost]
         public async Task<IActionResult> DeletePicture(int pictureId)
@@ -94,7 +99,7 @@ namespace SUPREA_LOGISTICS.Controllers
             _context.VehiclePictures.Update(picture);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = picture.VehicleId });
+            return Redirect(Url.Action("Details", new { id = picture.VehicleId}) + "#Pictures");
         }
         #endregion
 
@@ -149,7 +154,7 @@ namespace SUPREA_LOGISTICS.Controllers
             _context.VehicleDocuments.Add(doc);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = vehicleId });
+            return Redirect(Url.Action("Details", new { id = vehicleId }) + "#Documents");
         }
 
         [HttpPost]
@@ -162,24 +167,45 @@ namespace SUPREA_LOGISTICS.Controllers
             _context.VehicleDocuments.Update(doc);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = doc.VehicleId });
+            return Redirect(Url.Action("Details", new { id = doc.VehicleId}) + "#Documents");
         }
         #endregion
 
         #region VEHICLE MANIPULATION METHODS
         //Edit Vehicle Data
         [HttpGet]
-        public IActionResult EditVehicle(string id)
+        public IActionResult EditVehicle(int id)
         {
-            var vehicle = _context.Vehicles.FirstOrDefault(x => x.VehicleId.ToString() == id && x.IsAvailable);
+            var vehicle = _context.Vehicles
+                .Include(v => v.DriverInCharge) // if you have a navigation property
+                .FirstOrDefault(v => v.VehicleId == id);
+
+            if (vehicle == null) return NotFound();
+
+            ViewBag.Drivers = _context.Drivers
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DriverId.ToString(),
+                    Text = $"{d.FullName} - {d.Position}"
+                })
+                .ToList();
+
             return View(vehicle);
         }
+
         //Edit Vehicle Data - Post
         [HttpPost]
         public async Task<IActionResult> EditVehicle(Vehicle vehicle)
         {
             if(!ModelState.IsValid)
             {
+                ViewBag.Drivers = _context.Drivers
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DriverId.ToString(),
+                    Text = $"{d.FullName} - {d.Position}"
+                })
+                .ToList();
                 return View(vehicle);
             }
             _context.Vehicles.Update(vehicle);
@@ -196,6 +222,13 @@ namespace SUPREA_LOGISTICS.Controllers
         [HttpGet]
         public IActionResult CreateVehicle()
         {
+            ViewBag.Drivers = _context.Drivers
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DriverId.ToString(),
+                    Text = $"{d.FullName} - {d.Position}"
+                })
+                .ToList();
             return View();
         }
         //Create new vehicle data - Post
@@ -203,7 +236,16 @@ namespace SUPREA_LOGISTICS.Controllers
         public async Task<IActionResult> CreateVehicle(VehicleFormViewModel vm)
         {
             if (!ModelState.IsValid)
+            {
+                ViewBag.Drivers = _context.Drivers
+                .Select(d => new SelectListItem
+                {
+                    Value = d.DriverId.ToString(),
+                    Text = $"{d.FullName} - {d.Position}"
+                })
+                .ToList();
                 return View(vm);
+            }
 
             // Save vehicle first
             _context.Vehicles.Add(vm.Vehicle);
@@ -249,7 +291,9 @@ namespace SUPREA_LOGISTICS.Controllers
                         FileType = file.ContentType,
                         FileData = ms.ToArray(),
                         DocumentType = type,
-                        ExpirationDate = DateOnly.Parse(expDate.ToString()),
+                        ExpirationDate = expDate.HasValue
+                        ? DateOnly.FromDateTime(expDate.Value)
+                        : null,
                         IsAvailable = true
                     });
                 }
@@ -257,7 +301,7 @@ namespace SUPREA_LOGISTICS.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = vehicleId });
         }
 
         #endregion  

@@ -111,11 +111,18 @@
             <label for="SiteLocation" class="form-label">Site Location</label>
             <input asp-for="SiteLocation" class="form-control" />
         </div>
+        <div class="mb-2">
+            <label asp-for="DriverInChargeId" class="form-label">Current Driver</label>
+            <select asp-for="DriverInChargeId" asp-items="ViewBag.Drivers" class="form-select">
+                <option value="">-- Select Driver --</option>
+            </select>
+        </div>
+
     </div>
 
     <div class="col-12 mt-3">
         <button type="submit" class="btn btn-primary">Save Vehicle</button>
-        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+        <a asp-action="Details" asp-controller="VehicleManagement" asp-route-id="@Model.VehicleId" class="btn btn-secondary ms-2">Cancel</a>
     </div>
 
 </form>

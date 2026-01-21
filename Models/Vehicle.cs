@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace SUPREA_LOGISTICS.Models;
@@ -21,6 +22,7 @@ public partial class Vehicle
 
     public string? PlateNo { get; set; }
 
+    [ValidateNever]
     public bool? Orcr { get; set; }
 
     public DateOnly? ExpirationDate { get; set; }
@@ -42,6 +44,8 @@ public partial class Vehicle
     public string? VehicleStatus { get; set; }
 
     public bool IsAvailable { get; set; }
+    public int? DriverInChargeId { get; set; }
+    public virtual Driver? DriverInCharge { get; set; }
 
     public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
 

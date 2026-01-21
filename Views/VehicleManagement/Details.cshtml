@@ -49,26 +49,27 @@
 @{  /* TABS */
     <ul class="nav nav-tabs" id="info">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" id="1">Properties</a>
+            <a class="nav-link active" href="#Properties">Properties</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="2">Pictures</a>
+            <a class="nav-link" href="#Pictures">Pictures</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="3">Maintenance Log</a>
+            <a class="nav-link" href="#Maintenance">Maintenance Log</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="4">Vehicle Log</a>
-        </li> 
+            <a class="nav-link" href="#VehicleLog">Vehicle Log</a>
+        </li>
         <li class="nav-item">
-            <a class="nav-link" id="5">Documents</a>
+            <a class="nav-link" href="#Documents">Documents</a>
         </li>
     </ul>
+
 }
 <div id="content" class="p-2">
 
 	@{	/* PROPERTIES */
-    <div id="1" class="row gap-0">
+    <div id="Properties" class="row gap-0">
         <div class="row g-3">
 
             <!-- General Information -->
@@ -168,6 +169,10 @@
                         <td>Site Location</td>
                         <td>@Model.SiteLocation</td>
                     </tr>
+                    <tr>
+                        <td>Current Driver</td>
+                        <td>@Model.DriverInCharge?.FullName</td>
+                    </tr>
                 </table>
             </div>
 
@@ -177,7 +182,7 @@
 	}      
     @{  /* PICTURES */   
 
-    <div id="2" class="visually-hidden">
+    <div id="Pictures" class="visually-hidden">
         <div class="w-100 d-flex justify-content-between">
             <h4>Vehicle Pictures</h4>
             <div class="d-flex flex-coloumn g-2">
@@ -230,7 +235,7 @@
     }           
     @{  /* MAINTENANCE LOG */
 
-    <div id="3" class="visually-hidden">
+        <div id="Maintenance" class="visually-hidden">
         <div class="w-100 d-flex justify-content-between">
             <h4>Maintenance Logs</h4>
             <div class="d-flex flex-coloumn g-2">
@@ -250,6 +255,7 @@
                     <th>Cost</th>
                     <th>Date Completed</th>
                     <th>Remarks</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -257,7 +263,7 @@
                 {
                     @foreach(var log in Model.MaintenanceLogs)
                     {
-                        <tr id="@log.MaintenanceId">
+                        <tr>
                             <td>@log.MaintenanceId</td>
                             <td>@(Convert.ToDateTime(log.CreatedAt).ToShortDateString())</td>
                             <td>@log.MaintenanceType</td>
@@ -266,6 +272,16 @@
                             <td>@log.Cost</td>
                             <td>@log.MaintenanceDate.ToString("MM/dd/yyyy")</td>
                             <td></td>
+                            <td>
+                                <div>
+                                    <a asp-action="EditMaintenanceLog"
+                                       asp-controller="MaintenanceLog"
+                                       asp-route-id="@log.MaintenanceId"
+                                       class="mb-1">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
 				    }
                 }
@@ -280,7 +296,7 @@
     </div>
     }    
     @{  /* VEHICLE LOG */
-    <div id="4" class="visually-hidden">
+        <div id="VehicleLog" class="visually-hidden">
         <div class="w-100 d-flex justify-content-between">
             <h4>Vehicle Logs</h4>
             <div class="d-flex flex-coloumn g-2">
@@ -324,7 +340,7 @@
     }
     @{  /* DOCUMENTS */
 
-    <div id="5" class="visually-hidden">
+    <div id="Documents" class="visually-hidden">
         <div class="d-flex justify-content-between">
             <h4>Documents</h4>
             <div class="d-flex flex-coloumn g-2">
@@ -517,13 +533,6 @@
                 const modalImage = document.getElementById("modalImage");
                 const removeBtn = document.getElementById("remove");
 
-                $('#MaintenanceTable tr').on("click", function() {
-                    $('tbody tr').removeClass('table-active');
-                    $(this).addClass('table-active');
-                    const id = this.id;
-                    window.location.href = `/MaintenanceLog/EditMaintenanceLog/${id}`;
-                });
-
                 imageModal.addEventListener("show.bs.modal", function (event) {
                     const trigger = event.relatedTarget;
 
@@ -564,21 +573,30 @@
             });
         </script>
     <script>
-        $(document).ready(function (){
-            $("#info a").on("click", function () {
-                var id = $(this).attr("id"); // 1,2,3,4
+           function showTabFromHash() {
+            var hash = window.location.hash; // e.g., #Pictures
+            if (!hash) hash = "#Properties"; // default tab
+            $("#info a").removeClass("active");
+            $("#info a[href='" + hash + "']").addClass("active");
+            $("#content > div").addClass("visually-hidden");
+            $(hash).removeClass("visually-hidden");
+        }
 
-                // set active tab
-                $("#info a").removeClass("active");
-                $(this).addClass("active");
+        // Run on page load
+        showTabFromHash();
 
-                // hide all content
-                $("#content > div").addClass("visually-hidden");
+        // When a tab is clicked
+        $("#info a").on("click", function (e) {
+            e.preventDefault();
+            var hash = $(this).attr("href");
+            window.location.hash = hash; // update URL
+            showTabFromHash();
+        });
 
-                // show selected content
-                $("#content > div[id='" + id + "']").removeClass("visually-hidden");
-            });
-        })
+        // Optional: handle back/forward browser buttons
+        $(window).on("hashchange", function() {
+            showTabFromHash();
+        });
 
         var docModal = document.getElementById('docModal');
         docModal.addEventListener('show.bs.modal', function (event) {

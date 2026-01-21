@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
-
+@model IEnumerable<Vehicle>
 
 <!-- Logistics Page -->
 <h2 id="logistics" style="margin-top: 40px" class="text-primary">Logistics</h2>
@@ -43,16 +43,14 @@
         <th>Driver</th>
         <th>Status</th>
     </tr>
-    <tr>
-        <td>L300</td>
-        <td>Jonathan Juarez</td>
-        <td><span class="badge confirmed">Available</span></td>
-    </tr>
-    <tr>
-        <td>Boom Truck</td>
-        <td>Micahel Tuico</td>
-        <td><span class="badge pending">On Delivery</span></td>
-    </tr>
+    @foreach(var v in Model)
+    {
+        <tr>
+            <td>@v.UnitModelSeries - @v.BrandMake</td>
+            <td></td>
+            <td>@v.VehicleStatus</td>
+        </tr>
+    }
 </table>
 
 <!-- Material Request Form -->
