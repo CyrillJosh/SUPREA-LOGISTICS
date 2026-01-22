@@ -120,8 +120,8 @@
                         <td>
                                 @if (Model.VehicleDocuments.Any(x => x.DocumentType == "OR/CR"))
                                 {
-                                    <a asp-controller="VehicleManagement" asp-action="DownloadDocument" asp-route-id="@Model.VehicleDocuments.FirstOrDefault(x => x.FileType == "OR/CR")?.DocumentId" class="text-decoration-none">
-                                        @Model.VehicleDocuments.FirstOrDefault(x => x.FileType == "OR/CR")?.FileName
+                                    <a href="@Url.Action("Details", "VehicleManagement", new { id = Model.VehicleId })#Documents"
+                                       class="text-decoration-none">
                                     </a>
                                 }
                                 else
@@ -265,21 +265,23 @@
                     {
                         <tr>
                             <td>@log.MaintenanceId</td>
-                            <td>@(Convert.ToDateTime(log.CreatedAt).ToShortDateString())</td>
+                            <td>@(Convert.ToDateTime(log.CreatedAt).ToString("MM/dd/yyyy"))</td>
                             <td>@log.MaintenanceType</td>
                             <td>@log.Description</td>
                             <td>@log.ServiceProvider</td>
                             <td>@log.Cost</td>
-                            <td>@log.MaintenanceDate.ToString("MM/dd/yyyy")</td>
+                            <td>@log.DateCompleted.ToString("MM/dd/yyyy")</td>
                             <td></td>
                             <td>
-                                <div>
+                                <div class="d-flex justify-content-around align-items-center">
                                     <a asp-action="EditMaintenanceLog"
                                        asp-controller="MaintenanceLog"
-                                       asp-route-id="@log.MaintenanceId"
-                                       class="mb-1">
+                                       asp-route-id="@log.MaintenanceId">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
+                                    <button class="border-0 text-danger bg-transparent DeleteLog p-0 m-0" data-id="@log.MaintenanceId">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -288,7 +290,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="8" class="text-center">No maintenance logs available.</td>
+                        <td colspan="9" class="text-center">No maintenance logs available.</td>
                     </tr>
 				}
             </tbody>
@@ -367,18 +369,26 @@
                         <td>@doc.FileName</td>
                         <td>@doc.ExpirationDate?.ToShortDateString()</td>
                         <td>
-                            <a href="@Url.Action("DownloadDocument", "VehicleManagement", new { id = doc.DocumentId })"
-                                class="btn btn-sm btn-success" target="_blank">Download</a>
-
-                            @* Wrap the button in a span for tooltip if disabled *@
                             <span data-bs-toggle="tooltip"
-                                    title="@(isWord ? "Preview not available for Word documents" : "Click to preview")">
+                                  title="Click to download file">
+                                <a href="@Url.Action("DownloadDocument", "Document", new { id = doc.DocumentId })"
+                                    class="btn btn-sm btn-success" target="_blank"><i class="fa-solid fa-file-download"></i></a>
+                            </span>
+                            <span data-bs-toggle="tooltip"
+                                  title="@(isWord ? "Preview not available for Word documents" : "Click to preview")">
                                 <button type="button"
                                         class="btn btn-sm btn-primary @(isWord ? "disabled" : "")"
                                         data-bs-toggle="modal"
                                         data-bs-target="#docModal"
-                                        data-bs-src="@Url.Action("ViewDocument", "VehicleManagement", new { id = doc.DocumentId })">
-                                    Preview
+                                        data-bs-src="@Url.Action("ViewDocument", "Document", new { id = doc.DocumentId })">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </span>
+                            <span data-bs-toggle="tooltip" title="Click to delete file">
+                                <button type="button"
+                                            class="btn btn-sm btn-danger DeleteDocument"
+                                        data-id="@doc.DocumentId">
+                                    <i class="fa-solid fa-trash"></i>
                                 </button>
                             </span>
                         </td>
@@ -526,87 +536,111 @@
 </div>
 }
 @section Scripts{ 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const imageModal = document.getElementById("imageModal");
+            const modalImage = document.getElementById("modalImage");
+            const removeBtn = document.getElementById("remove");
 
-                const imageModal = document.getElementById("imageModal");
-                const modalImage = document.getElementById("modalImage");
-                const removeBtn = document.getElementById("remove");
+            imageModal.addEventListener("show.bs.modal", function (event) {
+                const trigger = event.relatedTarget;
 
-                imageModal.addEventListener("show.bs.modal", function (event) {
-                    const trigger = event.relatedTarget;
+                const imgSrc = trigger.getAttribute("data-bs-src");
+                const pictureId = trigger.getAttribute("data-picture-id");
 
-                    const imgSrc = trigger.getAttribute("data-bs-src");
-                    const pictureId = trigger.getAttribute("data-picture-id");
+                modalImage.src = imgSrc;
+                removeBtn.setAttribute("data-id", pictureId);
+            });
+           
+            removeBtn.addEventListener("click", function () {
+                const pictureId = this.getAttribute("data-id");
 
-                    modalImage.src = imgSrc;
-                    removeBtn.setAttribute("data-id", pictureId);
-                });
+                if (!pictureId) return;
 
-                removeBtn.addEventListener("click", function () {
-                    const pictureId = this.getAttribute("data-id");
+                if (!confirm("Are you sure you want to remove this picture?")) {
+                    return;
+                }
 
-                    if (!pictureId) return;
-
-                    if (!confirm("Are you sure you want to remove this picture?")) {
-                        return;
+                fetch('@Url.Action("DeletePicture", "VehicleManagement")', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "RequestVerificationToken":
+                            document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: `pictureId=${pictureId}`
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Failed to remove picture.");
                     }
+                })
+                .catch(() => alert("An error occurred."));
+            });
 
-                    fetch('@Url.Action("DeletePicture", "VehicleManagement")', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "RequestVerificationToken":
-                                document.querySelector('input[name="__RequestVerificationToken"]')?.value
-                        },
-                        body: `pictureId=${pictureId}`
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            alert("Failed to remove picture.");
-                        }
-                    })
-                    .catch(() => alert("An error occurred."));
+            function showTabFromHash() {
+                var hash = window.location.hash; // e.g., #Pictures
+                if (!hash) hash = "#Properties"; // default tab
+                $("#info a").removeClass("active");
+                $("#info a[href='" + hash + "']").addClass("active");
+                $("#content > div").addClass("visually-hidden");
+                $(hash).removeClass("visually-hidden");
+            }
+
+            // Run on page load
+            showTabFromHash();
+
+            // When a tab is clicked
+            $("#info a").on("click", function (e) {
+                e.preventDefault();
+                var hash = $(this).attr("href");
+                window.location.hash = hash; // update URL
+                showTabFromHash();
+            });
+
+            // Optional: handle back/forward browser buttons
+            $(window).on("hashchange", function() {
+                showTabFromHash();
+            });
+
+            var docModal = document.getElementById('docModal');
+            docModal.addEventListener('show.bs.modal', function (event) {
+                var btn = event.relatedTarget;
+                var src = btn.getAttribute('data-bs-src');
+                docModal.querySelector('#modalDoc').src = src;
+            });
+            docModal.addEventListener('hidden.bs.modal', function () {
+                docModal.querySelector('#modalDoc').src = '';
+            });
+
+            $(".DeleteLog").on("click", function () {
+                if (!confirm("Delete this maintenance log?")) return;
+
+                const id = $(this).data("id");
+
+                $.post("/MaintenanceLog/DeleteMaintenanceLog", { id: id })
+                .done(function () {
+                    location.reload();
+                })
+                .fail(function () {
+                    alert("Delete failed");
                 });
             });
-        </script>
-    <script>
-           function showTabFromHash() {
-            var hash = window.location.hash; // e.g., #Pictures
-            if (!hash) hash = "#Properties"; // default tab
-            $("#info a").removeClass("active");
-            $("#info a[href='" + hash + "']").addClass("active");
-            $("#content > div").addClass("visually-hidden");
-            $(hash).removeClass("visually-hidden");
-        }
+            $(".DeleteDocument").on("click", function () {
+                if (!confirm("Delete this Document?")) return;
 
-        // Run on page load
-        showTabFromHash();
+                const id = $(this).data("id");
 
-        // When a tab is clicked
-        $("#info a").on("click", function (e) {
-            e.preventDefault();
-            var hash = $(this).attr("href");
-            window.location.hash = hash; // update URL
-            showTabFromHash();
+                $.post("/Document/DeleteDocument", { id: id })
+                .done(function () {
+                    location.reload();
+                })
+                .fail(function () {
+                    alert("Delete failed");
+                });
+            });
         });
-
-        // Optional: handle back/forward browser buttons
-        $(window).on("hashchange", function() {
-            showTabFromHash();
-        });
-
-        var docModal = document.getElementById('docModal');
-        docModal.addEventListener('show.bs.modal', function (event) {
-            var btn = event.relatedTarget;
-            var src = btn.getAttribute('data-bs-src');
-            docModal.querySelector('#modalDoc').src = src;
-        });
-        docModal.addEventListener('hidden.bs.modal', function () {
-            docModal.querySelector('#modalDoc').src = '';
-        });
-
     </script>
 }

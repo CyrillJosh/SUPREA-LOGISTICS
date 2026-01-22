@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SUPREA_LOGISTICS.Context;
 using SUPREA_LOGISTICS.Models;
 
@@ -18,7 +19,7 @@ namespace SUPREA_LOGISTICS.Controllers
 
         public IActionResult Index()
         {
-            var vehicles = _context.Vehicles.ToList();
+            var vehicles = _context.Vehicles.Include(x => x.DriverInCharge).ToList();
             return View(vehicles);
         }
 

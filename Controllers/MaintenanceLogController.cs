@@ -36,7 +36,7 @@ namespace SUPREA_LOGISTICS.Controllers
             return View(new MaintenanceLog
             {
                 VehicleId = vehicleId,
-                MaintenanceDate = DateOnly.FromDateTime(DateTime.Today)
+                DateCompleted = DateOnly.FromDateTime(DateTime.Today)
             });
         }
 
@@ -80,8 +80,29 @@ namespace SUPREA_LOGISTICS.Controllers
 
             _context.MaintenanceLogs.Update(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction("MaintenaceLogs");
+            return Redirect(Url.Action("Details","VehicleManagement", new { id = model.VehicleId}) + "#Maintenance");
+
         }
+        [HttpPost]
+        public async Task<IActionResult> DeleteMaintenanceLog(int id)
+        {
+            var mlog = await _context.MaintenanceLogs
+                .FirstOrDefaultAsync(x => x.MaintenanceId == id);
+
+            if (mlog == null)
+                return NotFound();
+
+            int vehicleId = mlog.VehicleId;
+
+            _context.MaintenanceLogs.Remove(mlog);
+            await _context.SaveChangesAsync();
+
+            return Redirect(
+                Url.Action("Details", "VehicleManagement", new { id = vehicleId }) + "#Maintenance"
+            );
+        }
+
+
         private void LoadVehicles()
         {
             ViewBag.Vehicles = _context.Vehicles

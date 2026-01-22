@@ -7,7 +7,7 @@
 <h2 class="text-primary mb-3">@ViewData["Title"]</h2>
 
 <form asp-action="EditMaintenanceLog"
-      asp-controller="VehicleManagement"
+      asp-controller="MaintenanceLog"
       method="post"
       class="row g-3">
 
@@ -32,8 +32,8 @@
 
     <!-- Date -->
     <div class="col-md-6">
-        <label asp-for="MaintenanceDate" class="form-label">Maintenance Date</label>
-        <input asp-for="MaintenanceDate" type="date" class="form-control" required />
+        <label asp-for="DateCompleted" class="form-label">Date Completed</label>
+        <input asp-for="DateCompleted" type="date" class="form-control" required />
     </div>
 
     <!-- Type -->

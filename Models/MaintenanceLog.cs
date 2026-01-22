@@ -11,7 +11,7 @@ public partial class MaintenanceLog
 
     public int VehicleId { get; set; }
 
-    public DateOnly MaintenanceDate { get; set; }
+    public DateOnly DateCompleted { get; set; }
 
     public string? MaintenanceType { get; set; }
 

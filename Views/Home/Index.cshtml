@@ -47,8 +47,8 @@
     {
         <tr>
             <td>@v.UnitModelSeries - @v.BrandMake</td>
-            <td></td>
-            <td>@v.VehicleStatus</td>
+            <td>@(v.DriverInCharge?.FullName?? "-")</td>
+            <td>@(v.VehicleStatus?? "-")</td>
         </tr>
     }
 </table>
