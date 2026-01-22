@@ -26,8 +26,8 @@
         </div>
         <div class="h-100 d-flex gap-3 justify-content-end align-items-center">
             <a asp-action="EditVehicle" asp-route-id="@Model.VehicleId" class="fa-solid fa-pen text-primary text-decoration-none option-icon text-center d-flex align-items-center"></a>
-            <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
-                <a class="fa-solid fa-plus text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
+            <div class="dropdown p-0 m-0" style="cursor: pointer">
+                <a class="fa-solid fa-plus text-primary text-decoration-none dropdown-toggle-split px-0" data-bs-toggle="dropdown"></a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId">New MaintenanceLog</a></li>
                     <li><a class="dropdown-item" href="#">New VehicleLog</a></li>
@@ -36,7 +36,7 @@
             </div>
             <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon text-center  d-flex align-items-center" onclick="window.location.reload()"></a>
             <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
-                <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown">
+                <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split px-0" data-bs-toggle="dropdown">
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Export</a></li>
@@ -66,7 +66,7 @@
     </ul>
 
 }
-<div id="content" class="p-2">
+<div id="content" class="p-2 w-100">
 
 	@{	/* PROPERTIES */
     <div id="Properties" class="row gap-0">
@@ -279,7 +279,7 @@
                                        asp-route-id="@log.MaintenanceId">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
-                                    <button class="border-0 text-danger bg-transparent DeleteLog p-0 m-0" data-id="@log.MaintenanceId">
+                                    <button class="border-0 text-danger bg-transparent DeleteMLog p-0 m-0" data-id="@log.MaintenanceId">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
@@ -355,7 +355,7 @@
         <table class="table">
             <tr>
                 <th>Type</th>
-                <th>File</th>
+                <th>File Name</th>
                 <th>Expiration</th>
                 <td>Action</td>
             </tr>
@@ -368,27 +368,27 @@
                         <td>@doc.DocumentType</td>
                         <td>@doc.FileName</td>
                         <td>@doc.ExpirationDate?.ToShortDateString()</td>
-                        <td>
+                        <td class="d-flex justify-content-evenly">
                             <span data-bs-toggle="tooltip"
                                   title="Click to download file">
                                 <a href="@Url.Action("DownloadDocument", "Document", new { id = doc.DocumentId })"
-                                    class="btn btn-sm btn-success" target="_blank"><i class="fa-solid fa-file-download"></i></a>
+                                    class="btn bg-transparent m-0 p-0 text-success" target="_blank"><i class="fa-solid fa-file-download"></i></a>
                             </span>
                             <span data-bs-toggle="tooltip"
                                   title="@(isWord ? "Preview not available for Word documents" : "Click to preview")">
                                 <button type="button"
-                                        class="btn btn-sm btn-primary @(isWord ? "disabled" : "")"
+                                        class="btn m-0 p-0 bg-transparent @(isWord ? "disabled" : "")"
                                         data-bs-toggle="modal"
                                         data-bs-target="#docModal"
                                         data-bs-src="@Url.Action("ViewDocument", "Document", new { id = doc.DocumentId })">
-                                    <i class="fa-solid fa-eye"></i>
+                                    <i class="fa-solid fa-eye text-primary"></i>
                                 </button>
                             </span>
                             <span data-bs-toggle="tooltip" title="Click to delete file">
                                 <button type="button"
-                                            class="btn btn-sm btn-danger DeleteDocument"
+                                        class="btn m-0 p-0 bg-transparent DeleteDocument"
                                         data-id="@doc.DocumentId">
-                                    <i class="fa-solid fa-trash"></i>
+                                    <i class="fa-solid fa-trash text-danger"></i>
                                 </button>
                             </span>
                         </td>
@@ -615,7 +615,7 @@
                 docModal.querySelector('#modalDoc').src = '';
             });
 
-            $(".DeleteLog").on("click", function () {
+            $(".DeleteMLog").on("click", function () {
                 if (!confirm("Delete this maintenance log?")) return;
 
                 const id = $(this).data("id");

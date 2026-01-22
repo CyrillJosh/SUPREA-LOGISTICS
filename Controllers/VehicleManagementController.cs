@@ -81,6 +81,7 @@ namespace SUPREA_LOGISTICS.Controllers
                 FileType = file.ContentType,
                 FileData = memoryStream.ToArray(),
                 UploadedDate = DateTime.Now,
+                IsAvailable = true
             };
 
             _context.VehiclePictures.Add(picture);

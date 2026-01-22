@@ -18,6 +18,7 @@
             <th>Cost</th>
             <th>Date Completed</th>
             <th>Remarks</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -53,6 +54,16 @@
                     <td>
                         @log.Remarks
                     </td>
+                    <td>
+                        <a asp-action="EditMaintenanceLog"
+                           asp-controller="MaintenanceLog"
+                           asp-route-id="@log.MaintenanceId">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <button class="border-0 text-danger bg-transparent DeleteMLog p-0 m-0" data-id="@log.MaintenanceId">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             }
         }
@@ -66,3 +77,21 @@
         }
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $(".DeleteMLog").on("click", function () {
+               if (!confirm("Delete this maintenance log?")) return;
+
+               const id = $(this).data("id");
+
+               $.post("/MaintenanceLog/DeleteMaintenanceLog", { id: id })
+               .done(function () {
+                   location.reload();
+               })
+               .fail(function () {
+                   alert("Delete failed");
+               });
+           });
+    </script>
+}

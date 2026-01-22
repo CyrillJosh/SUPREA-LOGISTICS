@@ -45,14 +45,14 @@
             @foreach(var v in Model)
             {
                 <tr id="@v.VehicleId">
-                    <td>@v.VehicleId.ToString("0000")</td>
-                    <td>@v.UnitType</td>
-                    <td>@v.UnitModelSeries</td>
-                    <td>@v.BrandMake</td>
-                    <td>@v.YearModel</td>
-                    <td>@v.EngineNo</td>
-                    <td>@v.ChassisNo</td>
-                    <td>@v.PlateNo</td>
+                    <td>@(v.VehicleId.ToString("0000")??"-")</td>
+                    <td>@(v.UnitType??"-")</td>
+                    <td>@(v.UnitModelSeries??"-")</td>
+                    <td>@(v.BrandMake??"-")</td>
+                    <td>@(v.YearModel?.ToString()??"-")</td>
+                    <td>@(v.EngineNo??"-")</td>
+                    <td>@(v.ChassisNo??"-")</td>
+                    <td>@(v.PlateNo??"-")</td>
                     <td>
                         @{
                             var orcr = v.VehicleDocuments
@@ -68,20 +68,20 @@
                         }
                         else
                         {
-                            <span>N/A</span>
+                            <span>-</span>
                         }
                     </td>
 
-                    <td>@v.ExpirationDate</td>
-                    <td>@v.Insurance</td>
-                    <td>@v.InsuranceCoverage</td>
-                    <td>@v.InsuranceProvider</td>
-                    <td>@v.DateAcquired</td>
-                    <td>@v.Supplier</td>
-                    <td>@v.ProjectId</td>
-                    <td>@v.SiteLocation</td>
-                    <td>@v.DriverInCharge?.FullName</td>
-                    <td>@v.VehicleStatus</td>
+                    <td>@(v.ExpirationDate?.ToString()?? "-")</td>
+                    <td>@(v.Insurance??"-")</td>
+                    <td>@(v.InsuranceCoverage??"-")</td>
+                    <td>@(v.InsuranceProvider??"-")</td>
+                    <td>@(v.DateAcquired?.ToString()??"-")</td>
+                    <td>@(v.Supplier??"-")</td>
+                    <td>@(v.ProjectId??"-")</td>
+                    <td>@(v.SiteLocation??"-")</td>
+                    <td>@(v.DriverInCharge?.FullName??"-")</td>
+                    <td>@(v.VehicleStatus??"-")</td>
                 </tr>
             }
         </tbody>

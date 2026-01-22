@@ -3,7 +3,56 @@
 }
 @model IEnumerable<Vehicle>
 
-<!-- Logistics Page -->
+<!-- Executive Summary -->
+<div>
+    <div>
+        @{
+			var cat = Model.Select(v => v.UnitType).Distinct().ToList();
+        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="px-3 text-center" colspan="3"><h1>Vehicle Summary</h1></th>
+				</tr>
+                <tr>
+                    <th></th>
+                    <th>Owned</th>
+                    <th>Rented</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var type in cat)
+                {
+                    <tr>
+                            <td>@type</td>
+                            <td>
+                                @(Model.Count(v => v.UnitType == type))
+                            </td>
+                            <td>
+                                0
+                            </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="w-100 d-flex justify-content-evenly">
+        <div class="p-4 bg-primary shadow-sm text-white border border-3 border-white" style="min-width:15rem">
+            <h5>Total Vehicles</h5>
+            <h2>@Model.Count()</h2>
+        </div>
+        <div class="p-4 bg-success shadow-sm text-white border border-3 border-white" style="min-width:15rem">
+            <h5>Available Vehicles</h5>
+            <h2>@Model.Count(v => v.VehicleStatus == "Available")</h2>
+        </div>
+        <div class="p-4 bg-danger shadow-sm text-white border border-3 border-white" style="min-width:15rem">
+            <h5>Unavailable Vehicles</h5>
+            <h2>@Model.Count(v => v.VehicleStatus == "Unavailable")</h2>
+		</div>
+    </div>
+</div>
+@* <!-- Logistics Page -->
 <h2 id="logistics" style="margin-top: 40px" class="text-primary">Logistics</h2>
 <table class="table">
     <tr>
@@ -34,7 +83,7 @@
     <div class="day">Sat<br />15</div>
     <div class="day">Sun<br />16</div>
 </div>
-
+ *@
 <!-- Vehicle Page -->
 <h2 id="vehicles" style="margin-top: 40px" class="text-primary">Vehicle Management</h2>
 <table class="table">
@@ -52,7 +101,7 @@
         </tr>
     }
 </table>
-
+@* 
 <!-- Material Request Form -->
 <h2 style="margin-top: 40px" class="text-primary">Material Request</h2>
 <div class="p-4 bg-light rounded shadow-sm">
@@ -68,4 +117,4 @@
     </div>
 
     <button class="btn btn-primary w-100">Submit Request</button>
-</div>
+</div> *@
