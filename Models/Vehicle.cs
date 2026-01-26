@@ -8,6 +8,8 @@ public partial class Vehicle
 {
     public int VehicleId { get; set; }
 
+    public string? OwnershipStatus { get; set; }
+    
     public string? UnitType { get; set; }
 
     public string? UnitModelSeries { get; set; }

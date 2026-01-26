@@ -12,8 +12,8 @@ using SUPREA_LOGISTICS.Context;
 namespace SUPREA_LOGISTICS.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20260120063316_AddDriverModel")]
-    partial class AddDriverModel
+    [Migration("20260126071725_RenameType")]
+    partial class RenameType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,12 +68,12 @@ namespace SUPREA_LOGISTICS.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<DateOnly>("DateCompleted")
+                        .HasColumnType("date");
+
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateOnly>("MaintenanceDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("MaintenanceType")
                         .HasMaxLength(100)
@@ -149,6 +149,9 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.Property<bool?>("Orcr")
                         .HasColumnType("bit")
                         .HasColumnName("ORCR");
+
+                    b.Property<string>("OwnershipStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlateNo")
                         .HasMaxLength(50)

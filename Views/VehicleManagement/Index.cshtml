@@ -1,102 +1,134 @@
-﻿@{
-	ViewData["Title"] = "Vehicle Management";
+﻿@model List<Vehicle>
+@{
+    ViewData["Title"] = "Vehicle Management";
 }
-@model List<Vehicle>
-<div class="d-flex flex-row justify-content-between m-0 p-0">
-<h2 class="text-primary">Vehicle Management</h2>
-<div class="d-flex align-items-center gap-3">
-    <a asp-action="CreateVehicle" class=" text-decoration-none"><i class="fa-solid fa-plus option-icon d-flex align-items-center"></i></a>
-    <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon d-flex align-items-center" onclick="window.location.reload()"></a>
-    <div class="dropdown option-icon d-flex align-items-center" style="cursor: pointer">
-        <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split" data-bs-toggle="dropdown"></a>
-        <ul class="dropdown-menu">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary m-0">Vehicle Management</h2>
+    <div class="d-flex align-items-center gap-3">
+
+        <a asp-action="CreateVehicle" class="btn btn-sm btn-success">
+            <i class="fa-solid fa-plus me-1"></i> New
+        </a>
+
+        <button class="btn btn-sm btn-secondary" onclick="window.location.reload()">
+            <i class="fa-solid fa-rotate me-1"></i> Refresh
+        </button>
+
+        <div class="dropdown">
+            <button class="btn btn-sm btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-ellipsis-vertical me-1"></i> Options
+            </button>
+            <ul class="dropdown-menu">
                 <li><a class="dropdown-item" asp-action="Export" asp-controller="VehicleManagement">Export as CSV</a></li>
                 <li><a class="dropdown-item" href="#">Export as PDF</a></li>
-        </ul>
+            </ul>
+        </div>
+
     </div>
 </div>
-</div>
+
 <div class="card overflow-auto">
-    <table class="table table-bordered table-hover">
-        <thead class="table-info">
-            <tr>
-                <th>Vehicle Id</th>
-                <th>Unit Type</th>
-                <th>Unit Model/Series</th>
-                <th>Brand</th>
-                <th>Year Model</th>
-                <th>Engine No.</th>
-                <th>Chasis No.</th>
-                <th>Plate No.</th>
-                <th>OR/CR</th>
-                <th>Expiration</th>
-                <th>Insurance</th>
-                <th>Insurance Coverage</th>
-                <th>Insurance Provider</th>
-                <th>Date Acquired</th>
-                <th>Supplier</th>
-                <th>Project Id</th>
-                <th>Site Location</th>
-                <th>Current Driver</th>
-                <th>Vehicle Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var v in Model)
-            {
-                <tr id="@v.VehicleId">
-                    <td>@(v.VehicleId.ToString("0000")??"-")</td>
-                    <td>@(v.UnitType??"-")</td>
-                    <td>@(v.UnitModelSeries??"-")</td>
-                    <td>@(v.BrandMake??"-")</td>
-                    <td>@(v.YearModel?.ToString()??"-")</td>
-                    <td>@(v.EngineNo??"-")</td>
-                    <td>@(v.ChassisNo??"-")</td>
-                    <td>@(v.PlateNo??"-")</td>
-                    <td>
-                        @{
-                            var orcr = v.VehicleDocuments
-                            .FirstOrDefault(x => x.DocumentType == "OR/CR" && x.IsAvailable);
-                        }
-
-                        @if (orcr != null)
-                        {
-                            <a href="@Url.Action("Details", "VehicleManagement", new { id = v.VehicleId })#Documents"
-                               class="text-decoration-none">
-                                @orcr.FileName
-                            </a>
-                        }
-                        else
-                        {
-                            <span>-</span>
-                        }
-                    </td>
-
-                    <td>@(v.ExpirationDate?.ToString()?? "-")</td>
-                    <td>@(v.Insurance??"-")</td>
-                    <td>@(v.InsuranceCoverage??"-")</td>
-                    <td>@(v.InsuranceProvider??"-")</td>
-                    <td>@(v.DateAcquired?.ToString()??"-")</td>
-                    <td>@(v.Supplier??"-")</td>
-                    <td>@(v.ProjectId??"-")</td>
-                    <td>@(v.SiteLocation??"-")</td>
-                    <td>@(v.DriverInCharge?.FullName??"-")</td>
-                    <td>@(v.VehicleStatus??"-")</td>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped mb-0">
+            <thead class="table-info">
+                <tr>
+                    <th>Unit Type</th>
+                    <th>Ownership Status</th>
+                    <th>Unit Model/Series</th>
+                    <th>Brand</th>
+                    <th>Year Model</th>
+                    <th>Engine No.</th>
+                    <th>Chassis No.</th>
+                    <th>Plate No.</th>
+                    <th>OR/CR</th>
+                    <th>Expiration</th>
+                    <th>Insurance</th>
+                    <th>Insurance Coverage</th>
+                    <th>Insurance Provider</th>
+                    <th>Date Acquired</th>
+                    <th>Supplier</th>
+                    <th>Project Id</th>
+                    <th>Site Location</th>
+                    <th>Current Driver</th>
+                    <th>Vehicle Status</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var v in Model)
+                {
+                    <tr>
+                        <td>@(v.UnitType ?? "-")</td>
+                        <td>@(v.OwnershipStatus ?? "-")</td>
+                        <td>@(v.UnitModelSeries ?? "-")</td>
+                        <td>@(v.BrandMake ?? "-")</td>
+                        <td>@(v.YearModel?.ToString() ?? "-")</td>
+                        <td>@(v.EngineNo ?? "-")</td>
+                        <td>@(v.ChassisNo ?? "-")</td>
+                        <td>@(v.PlateNo ?? "-")</td>
+                        <td>
+                            @{
+                                var orcr = v.VehicleDocuments.FirstOrDefault(x => x.DocumentType == "OR/CR" && x.IsAvailable);
+                            }
+                            @if (orcr != null)
+                            {
+                                <a href="@Url.Action("Details", "VehicleManagement", new { id = v.VehicleId })#Documents" class="text-decoration-none">
+                                    @orcr.FileName
+                                </a>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                        <td>@(v.ExpirationDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                        <td>@(v.Insurance ?? "-")</td>
+                        <td>@(v.InsuranceCoverage ?? "-")</td>
+                        <td>@(v.InsuranceProvider ?? "-")</td>
+                        <td>@(v.DateAcquired?.ToString("yyyy-MM-dd") ?? "-")</td>
+                        <td>@(v.Supplier ?? "-")</td>
+                        <td>@(v.ProjectId ?? "-")</td>
+                        <td>@(v.SiteLocation ?? "-")</td>
+                        <td>@(v.DriverInCharge?.FullName ?? "-")</td>
+                        <td>@(v.VehicleStatus ?? "-")</td>
+                        <td class="align-middle">
+                            <div class="d-flex gap-1 justify-content-center align-items-center h-100">
+                                <a asp-action="EditVehicle" asp-route-id="@v.VehicleId" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                <button class="btn btn-sm btn-danger DeleteVehicle" data-id="@v.VehicleId">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            $('tbody tr').on("click", function() {
-                $('tbody tr').removeClass('table-active'); 
-                $(this).addClass('table-active');          
-                const id = this.id;
-                window.location.href = `/VehicleManagement/Details/${id}`;
-            });   
+        $(function () {
+            // Navigate to details on row click but ignore clicks on buttons
+            $('tbody tr').on("click", function (e) {
+                if (!$(e.target).closest('button, a').length) {
+                    const id = $(this).find('td:first').closest('tr').attr('id');
+                    window.location.href = `/VehicleManagement/Details/${id}`;
+                }
+            });
+
+            // Delete Vehicle
+            $(".DeleteVehicle").on("click", function () {
+                if (!confirm("Delete this vehicle?")) return;
+                const id = $(this).data("id");
+                $.post("/VehicleManagement/DeleteVehicle", { id: id })
+                    .done(() => location.reload())
+                    .fail(() => alert("Delete failed"));
+            });
         });
     </script>
 }

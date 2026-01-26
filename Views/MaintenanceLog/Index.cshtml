@@ -4,94 +4,90 @@
     ViewData["Title"] = "Maintenance Logs";
 }
 
-<h2 class="mb-3">Maintenance Logs</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary m-0">Maintenance Logs</h2>
+    <div class="d-flex gap-2">
+        <a asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" class="btn btn-success">
+            <i class="fa-solid fa-plus me-1"></i> New Log
+        </a>
+        <a href="#" class="btn btn-secondary" onclick="location.reload()">
+            <i class="fa-solid fa-rotate me-1"></i> Refresh
+        </a>
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-ellipsis-vertical me-1"></i> Options
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-action="Export" asp-controller="MaintenanceLog">Export as CSV</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Maintenance ID</th>
-            <th>Vehicle Plate No.</th>
-            <th>Date Issued</th>
-            <th>Maintenance Type</th>
-            <th>Details</th>
-            <th>Service Provider</th>
-            <th>Cost</th>
-            <th>Date Completed</th>
-            <th>Remarks</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var log in Model)
+<div class="card overflow-auto">
+    <table class="table table-bordered table-hover mb-0">
+        <thead class="table-info">
+            <tr>
+                <th>Maintenance ID</th>
+                <th>Vehicle Plate No.</th>
+                <th>Date Issued</th>
+                <th>Maintenance Type</th>
+                <th>Details</th>
+                <th>Service Provider</th>
+                <th>Cost</th>
+                <th>Date Completed</th>
+                <th>Remarks</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.MaintenanceId.ToString("0000")</td>
+                        <td>@(log.Vehicle?.PlateNo ?? "-")</td>
+                        <td>@(log.CreatedAt?.ToString("MMMM dd, yyyy") ?? "-")</td>
+                        <td>@(log.MaintenanceType ?? "-")</td>
+                        <td>@(log.Description ?? "-")</td>
+                        <td>@(log.ServiceProvider ?? "-")</td>
+                        <td>@(log.Cost.HasValue? log.Cost.Value.ToString("N2") : "-")</td>
+                        <td>@(log.DateCompleted.ToString("yyyy-MM-dd") ?? "-")</td>
+                        <td>@(log.Remarks ?? "-")</td>
+                        <td class="align-middle">
+                            <div class="d-flex gap-1">
+                                <a asp-action="EditMaintenanceLog" asp-controller="MaintenanceLog" asp-route-id="@log.MaintenanceId" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm DeleteMLog" data-id="@log.MaintenanceId">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>
-						@log.MaintenanceId.ToString("0000")
-                    </td>
-                    <td>
-                        @log.Vehicle?.PlateNo
-                    </td>
-                    <td>
-                        @log.CreatedAt?.ToString("MMMM dd, yyyy")
-                    </td>
-                    <td>
-                        @log.MaintenanceType
-                    </td>
-                    <td>
-                        @log.Description
-                    </td>
-                    <td>
-                        @log.ServiceProvider
-                    </td>
-                    <td>
-                        @(log.Cost.HasValue? log.Cost.Value.ToString("N2") : "-")
-                    </td>
-                    <td>
-                        @log.DateCompleted.ToString("yyyy-MM-dd")
-                    </td>
-                    <td>
-                        @log.Remarks
-                    </td>
-                    <td>
-                        <a asp-action="EditMaintenanceLog"
-                           asp-controller="MaintenanceLog"
-                           asp-route-id="@log.MaintenanceId">
-                            <i class="fa-solid fa-pen"></i>
-                        </a>
-                        <button class="border-0 text-danger bg-transparent DeleteMLog p-0 m-0" data-id="@log.MaintenanceId">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
+                    <td colspan="10" class="text-center text-muted">No maintenance logs found.</td>
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td colspan="8" class="text-center text-muted">
-                    No maintenance logs found.
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
-@section Scripts{
+@section Scripts {
     <script>
         $(".DeleteMLog").on("click", function () {
-               if (!confirm("Delete this maintenance log?")) return;
+            if (!confirm("Delete this maintenance log?")) return;
 
-               const id = $(this).data("id");
+            const id = $(this).data("id");
 
-               $.post("/MaintenanceLog/DeleteMaintenanceLog", { id: id })
-               .done(function () {
-                   location.reload();
-               })
-               .fail(function () {
-                   alert("Delete failed");
-               });
-           });
+            $.post("/MaintenanceLog/DeleteMaintenanceLog", { id: id })
+                .done(function () { location.reload(); })
+                .fail(function () { alert("Delete failed"); });
+        });
     </script>
 }

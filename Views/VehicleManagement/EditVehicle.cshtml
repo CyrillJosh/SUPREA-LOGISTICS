@@ -12,7 +12,14 @@
     <!-- General Information -->
     <div class="col-12 col-md-6 col-lg-4">
         <h4 class="border-bottom pb-1 mb-3">General Information</h4>
-
+        <div class="mb-2">
+            <label for="VehicleType" class="form-label">Ownership Status</label>
+            <select asp-for="OwnershipStatus" class="form-select">
+                <option value="Owned">Owned</option>
+                <option value="Leased">Leased</option>
+                <option value="Rented">Rented</option>
+            </select>
+        </div>
         <div class="mb-2">
             <label for="UnitType" class="form-label">Unit Type</label>
             <input asp-for="UnitType" class="form-control" required />

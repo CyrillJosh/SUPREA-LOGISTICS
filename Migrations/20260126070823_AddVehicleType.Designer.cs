@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SUPREA_LOGISTICS.Context;
 
@@ -11,9 +12,11 @@ using SUPREA_LOGISTICS.Context;
 namespace SUPREA_LOGISTICS.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    partial class MyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260126070823_AddVehicleType")]
+    partial class AddVehicleType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,9 +150,6 @@ namespace SUPREA_LOGISTICS.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("ORCR");
 
-                    b.Property<string>("OwnershipStatus")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PlateNo")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -178,6 +178,9 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.Property<string>("VehicleStatus")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("VehicleType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("YearModel")
                         .HasColumnType("int");

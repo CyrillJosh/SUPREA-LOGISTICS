@@ -1,174 +1,180 @@
 ﻿@using SUPREA_LOGISTICS.ViewModels
 @{
-	ViewData["Title"] = "Create Vehicle";
+    ViewData["Title"] = "Create Vehicle";
 }
 @model VehicleFormViewModel
 
 <h2 class="text-primary mb-4">@ViewData["Title"]</h2>
 
-<form asp-action="CreateVehicle"
-      method="post"
-      enctype="multipart/form-data"
-      class="row g-3">
+<form asp-action="CreateVehicle" method="post" enctype="multipart/form-data" class="row g-3">
+    <!-- Tabs navigation -->
+    <ul class="nav nav-tabs mb-3" id="vehicleTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab">
+                Vehicle Details
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pictures-tab" data-bs-toggle="tab" data-bs-target="#pictures" type="button" role="tab">
+                Pictures
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab">
+                Documents
+            </button>
+        </li>
+    </ul>
 
-
-    <!-- General Information -->
-    <div class="col-12 col-md-6 col-lg-4">
-        <h4 class="border-bottom pb-1 mb-3">General Information</h4>
-
-        <div class="mb-2">
-            <label for="UnitType" class="form-label">Unit Type</label>
-            <input asp-for="Vehicle.UnitType" class="form-control" required/>
-        </div>
-
-        <div class="mb-2">
-            <label for="UnitModelSeries" class="form-label">Unit Model / Series</label>
-            <input asp-for="Vehicle.UnitModelSeries" class="form-control" required />
-        </div>
-
-        <div class="mb-2">
-            <label for="BrandMake" class="form-label">Brand / Make</label>
-            <input asp-for="Vehicle.BrandMake" class="form-control" required />
-        </div>
-
-        <div class="mb-2">
-            <label for="YearModel" class="form-label">Year Model</label>
-            <input asp-for="Vehicle.YearModel" class="form-control" type="number" required />
-        </div>
-
-        <div class="mb-2">
-            <label for="PlateNo" class="form-label">Plate No.</label>
-            <input asp-for="Vehicle.PlateNo" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="VehicleStatus" class="form-label">Vehicle Status</label>
-            <input asp-for="Vehicle.VehicleStatus" class="form-control" value="OK" />
-        </div>
-    </div>
-
-    <!-- Legal Details -->
-    <div class="col-12 col-md-6 col-lg-4">
-        <h4 class="border-bottom pb-1 mb-3">Legal Details</h4>
-
-        <div class="mb-2">
-            <label for="EngineNo" class="form-label">Engine No.</label>
-            <input asp-for="Vehicle.EngineNo" class="form-control" required />
-        </div>
-
-        <div class="mb-2">
-            <label for="ChasisNo" class="form-label">Chasis No.</label>
-            <input asp-for="Vehicle.ChassisNo" class="form-control" required />
-        </div>
-
-        <div class="mb-2">
-            <label for="OrCr" class="form-label">OR / CR</label>
-            <input asp-for="Vehicle.Orcr" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="Expiration" class="form-label">Expiration</label>
-            <input asp-for="Vehicle.ExpirationDate" class="form-control" type="date" />
-        </div>
-    </div>
-
-    <!-- Insurance & Assignment -->
-    <div class="col-12 col-md-6 col-lg-4">
-        <h4 class="border-bottom pb-1 mb-3">Insurance & Assignment</h4>
-
-        <div class="mb-2">
-            <label for="Insurance" class="form-label">Insurance</label>
-            <input asp-for="Vehicle.Insurance" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="InsuranceCoverage" class="form-label">Insurance Coverage</label>
-            <input asp-for="Vehicle.InsuranceCoverage" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="InsuranceProvider" class="form-label">Insurance Provider</label>
-            <input asp-for="Vehicle.InsuranceProvider" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="DateAcquired" class="form-label">Date Acquired</label>
-            <input asp-for="Vehicle.DateAcquired" class="form-control" type="date" />
-        </div>
-
-        <div class="mb-2">
-            <label for="Supplier" class="form-label">Supplier</label>
-            <input asp-for="Vehicle.Supplier" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="ProjectId" class="form-label">Project ID</label>
-            <input asp-for="Vehicle.ProjectId" class="form-control" />
-        </div>
-
-        <div class="mb-2">
-            <label for="SiteLocation" class="form-label">Site Location</label>
-            <input asp-for="Vehicle.SiteLocation" class="form-control" />
-        </div>
-    </div>
-    <!-- Vehicle Pictures -->
-    <div class="col-12">
-        <h4 class="border-bottom pb-1 mb-3">Vehicle Pictures</h4>
-
-        <input type="file"
-               name="VehiclePictures"
-               class="form-control"
-               multiple
-               accept="image/*" />
-
-    </div>
-    <!-- Vehicle Documents -->
-    <div class="col-12">
-        <h4 class="border-bottom pb-1 mb-3">Vehicle Documents</h4>
-
-        <div id="documents-wrapper">
-            <div class="row g-2 mb-2 document-row">
-                <div class="col-md-4">
-                    <input type="file"
-                           name="VehicleDocuments"
-                           class="form-control"
-                           accept=".pdf,.jpg,.jpeg,.png,.docx" />
-
-                </div>
-
-                <div class="col-md-4">
-                    <select name="DocumentTypes" class="form-select">
-                        <option value="OR/CR">OR / CR</option>
-                        <option value="Insurance">Insurance</option>
-                        <option value="Registration">Registration</option>
-                        <option value="Other">Other</option>
+    <!-- Tabs content -->
+    <div class="tab-content">
+        <!-- Vehicle Details Tab -->
+        <div class="tab-pane fade show active" id="details" role="tabpanel">
+            <div class="row g-3">
+                <!-- Ownership Status -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Ownership Status</label>
+                    <select asp-for="Vehicle.OwnershipStatus" class="form-select">
+                        <option value="Owned">Owned</option>
+                        <option value="Leased">Leased</option>
+                        <option value="Rented">Rented</option>
                     </select>
                 </div>
-
-                <div class="col-md-4">
-                    <input type="date"
-                           name="DocumentExpirationDates"
-                           class="form-control" />
+                <!-- Unit Type -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Unit Type</label>
+                    <input asp-for="Vehicle.UnitType" class="form-control" required />
                 </div>
-                <div class="col-md-12 text-end">
-                    <button type="button"
-                            class="btn btn-sm btn-outline-danger"
-                            onclick="removeDocumentRow(this)">
-                        Remove
-                    </button>
+                <!-- Unit Model / Series -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Unit Model / Series</label>
+                    <input asp-for="Vehicle.UnitModelSeries" class="form-control" required />
                 </div>
-
+                <!-- Brand / Make -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Brand / Make</label>
+                    <input asp-for="Vehicle.BrandMake" class="form-control" required />
+                </div>
+                <!-- Year Model -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Year Model</label>
+                    <input asp-for="Vehicle.YearModel" class="form-control" type="number" required />
+                </div>
+                <!-- Plate No -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Plate No.</label>
+                    <input asp-for="Vehicle.PlateNo" class="form-control" />
+                </div>
+                <!-- Vehicle Status -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Vehicle Status</label>
+                    <input asp-for="Vehicle.VehicleStatus" class="form-control" value="OK" />
+                </div>
+                <!-- Legal Details -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Engine No.</label>
+                    <input asp-for="Vehicle.EngineNo" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Chassis No.</label>
+                    <input asp-for="Vehicle.ChassisNo" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">OR / CR</label>
+                    <input asp-for="Vehicle.Orcr" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Expiration</label>
+                    <input asp-for="Vehicle.ExpirationDate" class="form-control" type="date" />
+                </div>
+                <!-- Insurance & Assignment -->
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Insurance</label>
+                    <input asp-for="Vehicle.Insurance" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Insurance Coverage</label>
+                    <input asp-for="Vehicle.InsuranceCoverage" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Insurance Provider</label>
+                    <input asp-for="Vehicle.InsuranceProvider" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Date Acquired</label>
+                    <input asp-for="Vehicle.DateAcquired" class="form-control" type="date" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Supplier</label>
+                    <input asp-for="Vehicle.Supplier" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Project ID</label>
+                    <input asp-for="Vehicle.ProjectId" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label class="form-label">Site Location</label>
+                    <input asp-for="Vehicle.SiteLocation" class="form-control" />
+                </div>
             </div>
         </div>
 
-        <button type="button"
-                class="btn btn-sm btn-outline-primary mt-2"
-                onclick="addDocumentRow()">
-            + Add another document
-        </button>
+        <!-- Pictures Tab -->
+        <div class="tab-pane fade" id="pictures" role="tabpanel">
+            <div class="row g-3">
+                <div class="col-md-12 mb-2">
+                    <label class="form-label">Front View</label>
+                    <input type="file" name="VehiclePictures" class="form-control" accept="image/*" />
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label class="form-label">Left View</label>
+                    <input type="file" name="VehiclePictures" class="form-control" accept="image/*" />
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label class="form-label">Back View</label>
+                    <input type="file" name="VehiclePictures" class="form-control" accept="image/*" />
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label class="form-label">Right View</label>
+                    <input type="file" name="VehiclePictures" class="form-control" accept="image/*" />
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label class="form-label">Auxiliary View</label>
+                    <input type="file" name="VehiclePictures" class="form-control" accept="image/*" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div class="tab-pane fade" id="documents" role="tabpanel">
+            <div class="container-fluid px-0 mt-3" id="documents-wrapper">
+                <div class="row px-0 g-2 align-items-center document-row mb-2">
+                    <div class="col-md-4">
+                        <input type="file" name="VehicleDocuments" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.docx" />
+                    </div>
+                    <div class="col-md-3">
+                        <select name="DocumentTypes" class="form-select">
+                            <option value="OR/CR">OR / CR</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Registration">Registration</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" name="DocumentExpirationDates" class="form-control" />
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="button" class="btn btn-outline-danger w-100" onclick="removeDocumentRow(this)">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-success mt-2" onclick="addDocumentRow()">+ Add another document</button>
+        </div>
+
     </div>
 
-    <div class="col-12 mt-5">
+    <div class="col-12 mt-4">
         <button type="submit" class="btn btn-primary">Save Vehicle</button>
         <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
     </div>
@@ -185,6 +191,7 @@
 
             wrapper.appendChild(row);
         }
+
         function removeDocumentRow(btn) {
             const wrapper = document.getElementById("documents-wrapper");
             const rows = wrapper.querySelectorAll(".document-row");
@@ -192,8 +199,9 @@
             if (rows.length > 1) {
                 btn.closest(".document-row").remove();
             }
+            else {
+                alert("At least one document entry is required.");
+			}
         }
-
     </script>
 }
-

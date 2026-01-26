@@ -1,210 +1,168 @@
-﻿@using SUPREA_LOGISTICS.ViewModels;
-@model Vehicle;
+﻿@using SUPREA_LOGISTICS.ViewModels
+@model Vehicle
+
 @{
     ViewData["Title"] = Model.UnitType;
     var firstPic = Model?.VehiclePictures?.FirstOrDefault();
-
 }
-@{  /* HEADER */
-    <div class="d-flex flex-row justify-content-between align-items-center border-bottom mb-2">
-        <div class="d-flex flex-row align-items-center gap-2 py-2">
-            <div class="col-md-3 mb-2">
-                @if (firstPic != null)
-                {
-                    <img src="@Url.Action("ViewPicture", "VehicleManagement", new { id = firstPic.PictureId })"
-                         height="100"
-                         width="100" />
-                }
-                else
-                {
-                    <img src="~/images/no-image.png"
-                         height="100"
-                         width="100" />
-                }
-            </div>
-            <h2 class="text-primary">@Model.UnitModelSeries - @Model.VehicleId.ToString("0000")</h2>
+
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center border-bottom mb-2">
+    <div class="d-flex align-items-center gap-3">
+        <div class="col-md-3 mb-2">
+            <img src="@(
+                 firstPic != null
+                 ? Url.Action("ViewPicture", "VehicleManagement", new { id = firstPic.PictureId })
+                 : Url.Content("~/images/no-image.png")
+                                )"
+                 class="img-thumbnail"
+                 style="height:100px; width:100px;" />
         </div>
-        <div class="h-100 d-flex gap-3 justify-content-end align-items-center">
-            <a asp-action="EditVehicle" asp-route-id="@Model.VehicleId" class="fa-solid fa-pen text-primary text-decoration-none option-icon text-center d-flex align-items-center"></a>
-            <div class="dropdown p-0 m-0" style="cursor: pointer">
-                <a class="fa-solid fa-plus text-primary text-decoration-none dropdown-toggle-split px-0" data-bs-toggle="dropdown"></a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId">New MaintenanceLog</a></li>
-                    <li><a class="dropdown-item" href="#">New VehicleLog</a></li>
-                    <li><a class="dropdown-item" asp-action="CreateVehicle">New Vehicle</a></li>
-                </ul>
-            </div>
-            <a href="#" class="fa-solid fa-rotate text-primary text-decoration-none option-icon text-center  d-flex align-items-center" onclick="window.location.reload()"></a>
-            <div class="dropdown p-0 m-0 option-icon text-center  d-flex align-items-center" style="cursor: pointer">
-                <a class="fa-solid fa-ellipsis-vertical text-primary text-decoration-none dropdown-toggle-split px-0" data-bs-toggle="dropdown">
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Export</a></li>
-                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
-                </ul>
-            </div>
-        </div>
+        <h2 class="text-primary mb-0">@Model.UnitModelSeries - @Model.VehicleId.ToString("0000")</h2>
     </div>
-}
-@{  /* TABS */
-    <ul class="nav nav-tabs" id="info">
-        <li class="nav-item">
-            <a class="nav-link active" href="#Properties">Properties</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#Pictures">Pictures</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#Maintenance">Maintenance Log</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#VehicleLog">Vehicle Log</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#Documents">Documents</a>
-        </li>
-    </ul>
 
-}
-<div id="content" class="p-2 w-100">
+    <div class="d-flex align-items-center gap-2">
 
-	@{	/* PROPERTIES */
-    <div id="Properties" class="row gap-0">
+        <a asp-action="EditVehicle" asp-route-id="@Model.VehicleId" class="btn btn btn-sm btn-primary">
+            <i class="fa-solid fa-pen me-1"></i> Edit
+        </a>
+
+        <div class="dropdown">
+            <button class="btn btn-success btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-plus me-1"></i> New
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId">
+                        Maintenance Log
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">Vehicle Log</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-action="CreateVehicle">Vehicle</a>
+                </li>
+            </ul>
+        </div>
+
+        <a href="#" class="btn btn btn-sm btn-secondary" onclick="location.reload()">
+            <i class="fa-solid fa-rotate me-1"></i> Refresh
+        </a>
+
+       @*  <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-ellipsis-vertical me-1"></i> Options
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Export</a></li>
+                <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+            </ul>
+        </div> *@
+
+    </div>
+
+</div>
+
+<!-- TABS -->
+<ul class="nav nav-tabs mb-3" id="vehicleTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="properties-tab" data-bs-toggle="tab" data-bs-target="#properties" type="button" role="tab">Properties</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pictures-tab" data-bs-toggle="tab" data-bs-target="#pictures" type="button" role="tab">Pictures</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab">Maintenance Log</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="vehiclelog-tab" data-bs-toggle="tab" data-bs-target="#vehiclelog" type="button" role="tab">Vehicle Log</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab">Documents</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="vehicleTabsContent">
+
+    <!-- PROPERTIES -->
+    <div class="tab-pane fade show active" id="properties" role="tabpanel">
         <div class="row g-3">
 
-            <!-- General Information -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <h4 class="w-100 border-bottom mb-1 pb-1">General Information</h4>
-                <table class="w-100 table table-borderless">
-                    <tr>
-                        <td>Unit Type</td>
-                        <td>@Model.UnitType</td>
-                    </tr>
-                    <tr>
-                        <td>Unit Model / Series</td>
-                        <td>@Model.UnitModelSeries</td>
-                    </tr>
-                    <tr>
-                        <td>Brand</td>
-                        <td>@Model.BrandMake</td>
-                    </tr>
-                    <tr>
-                        <td>Year Model</td>
-                        <td>@Model.YearModel</td>
-                    </tr>
-                    <tr>
-                        <td>Plate No</td>
-                        <td>@Model.PlateNo</td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>@Model.VehicleStatus</td>
-                    </tr>
+            <!-- General Info -->
+            <div class="col-md-4">
+                <h5 class="border-bottom pb-1">General Information</h5>
+                <table class="table table-borderless">
+                    <tr><td>Ownership Status</td><td>@Model.OwnershipStatus</td></tr>
+                    <tr><td>Unit Type</td><td>@Model.UnitType</td></tr>
+                    <tr><td>Unit Model / Series</td><td>@Model.UnitModelSeries</td></tr>
+                    <tr><td>Brand</td><td>@Model.BrandMake</td></tr>
+                    <tr><td>Year Model</td><td>@Model.YearModel</td></tr>
+                    <tr><td>Plate No</td><td>@Model.PlateNo</td></tr>
+                    <tr><td>Status</td><td>@Model.VehicleStatus</td></tr>
                 </table>
             </div>
 
             <!-- Legal Details -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <h4 class="w-100 border-bottom mb-1 pb-1">Legal Details</h4>
-                <table class="w-100 table table-borderless">
-                    <tr>
-                        <td>Engine No</td>
-                        <td>@Model.EngineNo</td>
-                    </tr>
-                    <tr>
-                        <td>Chasis No</td>
-                        <td>@Model.ChassisNo</td>
-                    </tr>
+            <div class="col-md-4">
+                <h5 class="border-bottom pb-1">Legal Details</h5>
+                <table class="table table-borderless">
+                    <tr><td>Engine No</td><td>@Model.EngineNo</td></tr>
+                    <tr><td>Chassis No</td><td>@Model.ChassisNo</td></tr>
                     <tr>
                         <td>OR / CR</td>
                         <td>
-                                @if (Model.VehicleDocuments.Any(x => x.DocumentType == "OR/CR"))
-                                {
-                                    <a href="@Url.Action("Details", "VehicleManagement", new { id = Model.VehicleId })#Documents"
-                                       class="text-decoration-none">
-                                    </a>
-                                }
-                                else
-                                {
-                                    <span>N/A</span>
-                                }
+                            @if (Model.VehicleDocuments.Any(d => d.DocumentType == "OR/CR"))
+                            {
+                                <a href="#documents" class="text-decoration-none">View</a>
+                            }
+                            else
+                            {
+
+                                <span>N/A</span>
+                            }
                         </td>
                     </tr>
-                    <tr>
-                        <td>Expiration</td>
-                        <td>@Model.ExpirationDate</td>
-                    </tr>
+                    <tr><td>Expiration</td><td>@Model.ExpirationDate?.ToShortDateString()</td></tr>
                 </table>
             </div>
 
             <!-- Insurance & Assignment -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <h4 class="w-100 border-bottom mb-1 pb-1">Insurance & Assignment</h4>
-                <table class="w-100 table table-borderless">
-                    <tr>
-                        <td>Insurance</td>
-                        <td>@Model.Insurance</td>
-                    </tr>
-                    <tr>
-                        <td>Insurance Coverage</td>
-                        <td>@Model.InsuranceCoverage</td>
-                    </tr>
-                    <tr>
-                        <td>Insurance Provider</td>
-                        <td>@Model.InsuranceProvider</td>
-                    </tr>
-                    <tr>
-                        <td>Date Acquired</td>
-                        <td>@Model.DateAcquired</td>
-                    </tr>
-                    <tr>
-                        <td>Supplier</td>
-                        <td>@Model.Supplier</td>
-                    </tr>
-                    <tr>
-                        <td>Project ID</td>
-                        <td>@Model.ProjectId</td>
-                    </tr>
-                    <tr>
-                        <td>Site Location</td>
-                        <td>@Model.SiteLocation</td>
-                    </tr>
-                    <tr>
-                        <td>Current Driver</td>
-                        <td>@Model.DriverInCharge?.FullName</td>
-                    </tr>
+            <div class="col-md-4">
+                <h5 class="border-bottom pb-1">Insurance & Assignment</h5>
+                <table class="table table-borderless">
+                    <tr><td>Insurance</td><td>@Model.Insurance</td></tr>
+                    <tr><td>Coverage</td><td>@Model.InsuranceCoverage</td></tr>
+                    <tr><td>Provider</td><td>@Model.InsuranceProvider</td></tr>
+                    <tr><td>Date Acquired</td><td>@Model.DateAcquired?.ToShortDateString()</td></tr>
+                    <tr><td>Supplier</td><td>@Model.Supplier</td></tr>
+                    <tr><td>Project ID</td><td>@Model.ProjectId</td></tr>
+                    <tr><td>Site Location</td><td>@Model.SiteLocation</td></tr>
+                    <tr><td>Driver</td><td>@Model.DriverInCharge?.FullName</td></tr>
                 </table>
             </div>
 
         </div>
-
     </div>
-	}      
-    @{  /* PICTURES */   
 
-    <div id="Pictures" class="visually-hidden">
-        <div class="w-100 d-flex justify-content-between">
-            <h4>Vehicle Pictures</h4>
-            <div class="d-flex flex-coloumn g-2">
-                <a class="btn border-0 m-0 p-0" data-bs-toggle="modal"
-                        data-bs-target="#uploadPictureModal">
-                    <i class="fa-plus h4 m-0 p-0"></i>
-                </a>
-            </div>
+    <!-- PICTURES -->
+    <div class="tab-pane fade" id="pictures" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5>Vehicle Pictures</h5>
+            <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadPictureModal"><i class="fa fa-plus"></i> Add</a>
         </div>
-
-
         <div class="row">
-            @if (Model.VehiclePictures.Where(x => x.IsAvailable).Any())
+            @if (Model.VehiclePictures.Any(x => x.IsAvailable))
             {
                 @foreach (var pic in Model.VehiclePictures.Where(x => x.IsAvailable))
                 {
                     <div class="col-md-3 mb-2">
                         <img src="@Url.Action("ViewPicture", "VehicleManagement", new { id = pic.PictureId })"
-                             class="img-thumbnail preview-image"
-                             style="cursor:pointer; max-width:100%;"
+                             class="img-thumbnail w-100"
+                             style="cursor:pointer;"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
+                             data-picture-name="@pic.FileName"
                              data-bs-src="@Url.Action("ViewPicture", "VehicleManagement", new { id = pic.PictureId })"
                              data-picture-id="@pic.PictureId" />
                     </div>
@@ -212,48 +170,27 @@
             }
             else
             {
-                <div class="col-12">
-                    <p class="text-center">No pictures available.</p>
-                </div>
-			}
-        </div>
-        @* Bootstrap Modal *@
-        <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <img id="modalImage" src="" class="img-fluid w-100" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="remove" data-id="">Remove</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
+                <p class="text-center w-100">No pictures available.</p>
+            }
         </div>
     </div>
-    }           
-    @{  /* MAINTENANCE LOG */
 
-        <div id="Maintenance" class="visually-hidden">
-        <div class="w-100 d-flex justify-content-between">
-            <h4>Maintenance Logs</h4>
-            <div class="d-flex flex-coloumn g-2">
-                <a class="btn border-0 m-0 p-0" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId">
-                    <i class="fa-plus h4 m-0 p-0"></i>
-                </a>
-            </div>
+    <!-- MAINTENANCE LOG -->
+    <div class="tab-pane fade" id="maintenance" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5>Maintenance Logs</h5>
+            <a class="btn btn-sm btn-outline-primary" asp-action="CreateMaintenanceLog" asp-controller="MaintenanceLog" asp-route-vehicleId="@Model.VehicleId"><i class="fa fa-plus"></i> Add</a>
         </div>
-        <table class="table table-bordered table-hover w-100" id="MaintenanceTable">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>Maintenance ID</th>
+                    <th>ID</th>
                     <th>Date Issued</th>
-                    <th>Maintenance Type</th>
+                    <th>Type</th>
                     <th>Details</th>
-                    <th>Service Provider</th>
+                    <th>Provider</th>
                     <th>Cost</th>
-                    <th>Date Completed</th>
+                    <th>Completed</th>
                     <th>Remarks</th>
                     <th>Action</th>
                 </tr>
@@ -261,69 +198,50 @@
             <tbody>
                 @if (Model.MaintenanceLogs.Any())
                 {
-                    @foreach(var log in Model.MaintenanceLogs)
+                    foreach (var log in Model.MaintenanceLogs)
                     {
                         <tr>
                             <td>@log.MaintenanceId</td>
-                            <td>@(Convert.ToDateTime(log.CreatedAt).ToString("MM/dd/yyyy"))</td>
+                            <td>@log.CreatedAt?.ToString("MM/dd/yyyy")</td>
                             <td>@log.MaintenanceType</td>
                             <td>@log.Description</td>
                             <td>@log.ServiceProvider</td>
                             <td>@log.Cost</td>
-                            <td>@log.DateCompleted.ToString("MM/dd/yyyy")</td>
-                            <td></td>
+                            <td>@(log.DateCompleted.ToString("MM/dd/yyyy")??"-")</td>
+                            <td>@log.Remarks</td>
                             <td>
-                                <div class="d-flex justify-content-around align-items-center">
-                                    <a asp-action="EditMaintenanceLog"
-                                       asp-controller="MaintenanceLog"
-                                       asp-route-id="@log.MaintenanceId">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                    <button class="border-0 text-danger bg-transparent DeleteMLog p-0 m-0" data-id="@log.MaintenanceId">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
+                                <a asp-action="EditMaintenanceLog" asp-controller="MaintenanceLog" asp-route-id="@log.MaintenanceId"><i class="fa fa-pen"></i></a>
+                                <button class="btn btn-sm text-danger DeleteMLog" data-id="@log.MaintenanceId"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>
-				    }
+                    }
                 }
                 else
                 {
-                    <tr>
-                        <td colspan="9" class="text-center">No maintenance logs available.</td>
-                    </tr>
-				}
+                    <tr><td colspan="9" class="text-center">No maintenance logs available.</td></tr>
+                }
             </tbody>
         </table>
     </div>
-    }    
-    @{  /* VEHICLE LOG */
-        <div id="VehicleLog" class="visually-hidden">
-        <div class="w-100 d-flex justify-content-between">
-            <h4>Vehicle Logs</h4>
-            <div class="d-flex flex-coloumn g-2">
-                <a class="btn border-0 m-0 p-0">
-                    <i class="fa-plus h4 m-0 p-0"></i>
-                </a>
-            </div>
+
+    <!-- VEHICLE LOG -->
+    <div class="tab-pane fade" id="vehiclelog" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5>Vehicle Logs</h5>
+            <a class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i> Add</a>
         </div>
-        <table class="table table-bordered w-100">
+        <table class="table table-bordered">
             <thead>
-                <tr>
-                    <th>Log ID</th>
-                    <th>Date</th>
-                    <th>Driver Name</th>
-                    <th>Purpose of Trip</th>
-                    <th>Remarks</th>
-                </tr>
+                <tr><th>ID</th><th>Date</th><th>Driver</th><th>Purpose</th><th>Remarks</th></tr>
             </thead>
             <tbody>
-                @if(Model.VehicleLogs.Any()){
-                    @foreach (var log in Model.VehicleLogs)
+                @if (Model.VehicleLogs.Any())
+                {
+                    foreach (var log in Model.VehicleLogs)
                     {
                         <tr>
                             <td>@log.LogId</td>
-                            <td>@log.LogDate.ToString("yyyy-MM-dd")</td>
+                            <td>@(log.LogDate.ToString("yyyy-MM-dd")??"-")</td>
                             <td>@log.DriverName</td>
                             <td>@log.Purpose</td>
                             <td>@* @log.Remarks *@</td>
@@ -332,87 +250,45 @@
                 }
                 else
                 {
-                    <tr>
-                        <td colspan="8" class="text-center">No vehicle logs available.</td>
-					</tr>
+                    <tr><td colspan="5" class="text-center">No vehicle logs available.</td></tr>
                 }
             </tbody>
         </table>
     </div>
-    }
-    @{  /* DOCUMENTS */
 
-    <div id="Documents" class="visually-hidden">
-        <div class="d-flex justify-content-between">
-            <h4>Documents</h4>
-            <div class="d-flex flex-coloumn g-2">
-                <a class="btn border-0 m-0 p-0" data-bs-toggle="modal"
-                   data-bs-target="#uploadDocumentModal">
-                    <i class="fa-plus h4 m-0 p-0"></i>
-                </a>
-            </div>
+    <!-- DOCUMENTS -->
+    <div class="tab-pane fade" id="documents" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5>Documents</h5>
+            <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadDocumentModal"><i class="fa fa-plus"></i> Add</a>
         </div>
         <table class="table">
-            <tr>
-                <th>Type</th>
-                <th>File Name</th>
-                <th>Expiration</th>
-                <td>Action</td>
-            </tr>
-            @if (Model.VehicleDocuments.Where(x => x.IsAvailable).Any())
-            {
-                @foreach (var doc in Model.VehicleDocuments.Where(x => x.IsAvailable))
+            <thead><tr><th>Type</th><th>File</th><th>Expiration</th><th>Action</th></tr></thead>
+            <tbody>
+                @if (Model.VehicleDocuments.Any(x => x.IsAvailable))
                 {
-                    var isWord = doc.FileType.Contains("word");
-                    <tr>
-                        <td>@doc.DocumentType</td>
-                        <td>@doc.FileName</td>
-                        <td>@doc.ExpirationDate?.ToShortDateString()</td>
-                        <td class="d-flex justify-content-evenly">
-                            <span data-bs-toggle="tooltip"
-                                  title="Click to download file">
-                                <a href="@Url.Action("DownloadDocument", "Document", new { id = doc.DocumentId })"
-                                    class="btn bg-transparent m-0 p-0 text-success" target="_blank"><i class="fa-solid fa-file-download"></i></a>
-                            </span>
-                            <span data-bs-toggle="tooltip"
-                                  title="@(isWord ? "Preview not available for Word documents" : "Click to preview")">
-                                <button type="button"
-                                        class="btn m-0 p-0 bg-transparent @(isWord ? "disabled" : "")"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#docModal"
-                                        data-bs-src="@Url.Action("ViewDocument", "Document", new { id = doc.DocumentId })">
-                                    <i class="fa-solid fa-eye text-primary"></i>
-                                </button>
-                            </span>
-                            <span data-bs-toggle="tooltip" title="Click to delete file">
-                                <button type="button"
-                                        class="btn m-0 p-0 bg-transparent DeleteDocument"
-                                        data-id="@doc.DocumentId">
-                                    <i class="fa-solid fa-trash text-danger"></i>
-                                </button>
-                            </span>
-                        </td>
-                    </tr>
+                    foreach (var doc in Model.VehicleDocuments.Where(x => x.IsAvailable))
+                    {
+                        var isWord = doc.FileType.Contains("word");
+                        <tr>
+                            <td>@doc.DocumentType</td>
+                            <td>@doc.FileName</td>
+                            <td>@doc.ExpirationDate?.ToShortDateString()</td>
+                            <td>
+                                <a class="btn btn-sm btn-success" href="@Url.Action("DownloadDocument", "Document", new { id = doc.DocumentId })" target="_blank"><i class="fa fa-download"></i></a>
+                                <button class="btn btn-sm btn-primary @(isWord ? "disabled" : "")" data-bs-toggle="modal" data-bs-target="#docModal" data-bs-src="@Url.Action("ViewDocument", "Document", new { id = doc.DocumentId })"><i class="fa fa-eye"></i></button>
+                                <button class="btn btn-sm btn-danger DeleteDocument" data-id="@doc.DocumentId"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-            else
-            {
-                <tr>
-					<td colspan="4" class="text-center">No documents available.</td>
-                </tr>
-            }
+                else
+                {
+                    <tr><td colspan="4" class="text-center">No documents available.</td></tr>
+                }
+            </tbody>
         </table>
-        <div class="modal fade" id="docModal">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <iframe id="modalDoc" src="" frameborder="0" style="width:100%; height:80vh;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-    }
 
 </div>
 @* 
@@ -420,62 +296,61 @@
     MODALS 
     ///
 *@
-@{  /* PICTURE MODAL */ 
-    <div class="modal fade" id="uploadPictureModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+<!-- PICTURE MODAL -->
+<div class="modal fade" id="uploadPictureModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Vehicle Picture</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                @* <a asp-action="UploadPicture">Add pic</a> *@
-                @* <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
-
-                <input type="file" name="file" class="form-control" required />
-
-                <button type="submit" class="btn btn-primary mt-2">Upload Picture</button>
-            </form> *@
-                <form asp-action="UploadPicture"
-                      method="post"
-                      enctype="multipart/form-data">
-
-                    <div class="modal-body">
-
-                        @* Pass vehicleId *@
-                        <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
-
-                        <div class="mb-3">
-                            <label class="form-label">Select Image</label>
-                            <input type="file"
-                                   name="file"
-                                   class="form-control"
-                                   required />
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-
-                        <button type="submit"
-                                class="btn btn-primary">
-                            Upload
-                        </button>
-                    </div>
-
-                </form>
-
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Vehicle Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            @* <a asp-action="UploadPicture">Add pic</a> *@
+            @* <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+
+            <input type="file" name="file" class="form-control" required />
+
+            <button type="submit" class="btn btn-primary mt-2">Upload Picture</button>
+        </form> *@
+            <form asp-action="UploadPicture"
+                    method="post"
+                    enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    @* Pass vehicleId *@
+                    <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Image</label>
+                        <input type="file"
+                                name="file"
+                                class="form-control"
+                                required />
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Upload
+                    </button>
+                </div>
+
+            </form>
+
         </div>
     </div>
-}
-@{  /* DOCUMENT MODAL */ 
+</div>
+<!-- DOCUMENT MODAL -->
 <div class="modal fade" id="uploadDocumentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -534,113 +409,109 @@
         </div>
     </div>
 </div>
-}
-@section Scripts{ 
+<!-- IMAGE VIEW MODAL -->
+<div class="modal fade" id="imageModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <img id="modalImage" src="" class="img-fluid w-100" />
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <p id="picModalName">TEST</p>
+                <div>
+                <button type="button" class="btn btn-danger" id="remove" data-id="">Remove</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- DOCUMENT VIEW MODAL -->
+<div class="modal fade" id="docModal">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <iframe id="modalDoc" src="" style="width:100%;height:80vh;" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function(){
+
+            // Image modal
             const imageModal = document.getElementById("imageModal");
             const modalImage = document.getElementById("modalImage");
             const removeBtn = document.getElementById("remove");
 
-            imageModal.addEventListener("show.bs.modal", function (event) {
-                const trigger = event.relatedTarget;
+            imageModal?.addEventListener("show.bs.modal", function(e){
+                const trigger = e.relatedTarget;
+                modalImage.src = trigger.getAttribute("data-bs-src");
+                removeBtn.dataset.id = trigger.getAttribute("data-picture-id");
 
-                const imgSrc = trigger.getAttribute("data-bs-src");
-                const pictureId = trigger.getAttribute("data-picture-id");
-
-                modalImage.src = imgSrc;
-                removeBtn.setAttribute("data-id", pictureId);
+                // Set picture name dynamically if you have it
+                const picName = trigger.getAttribute("data-picture-name") || "No name";
+                document.getElementById("picModalName").textContent = picName;
             });
-           
-            removeBtn.addEventListener("click", function () {
-                const pictureId = this.getAttribute("data-id");
 
-                if (!pictureId) return;
-
-                if (!confirm("Are you sure you want to remove this picture?")) {
-                    return;
-                }
-
-                fetch('@Url.Action("DeletePicture", "VehicleManagement")', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "RequestVerificationToken":
-                            document.querySelector('input[name="__RequestVerificationToken"]')?.value
+            removeBtn?.addEventListener("click", function(){
+                const id = this.dataset.id;
+                if(!confirm("Remove this picture?")) return;
+                fetch('@Url.Action("DeletePicture", "VehicleManagement")',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/x-www-form-urlencoded',
+                        'RequestVerificationToken':document.querySelector('input[name="__RequestVerificationToken"]')?.value
                     },
-                    body: `pictureId=${pictureId}`
-                })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert("Failed to remove picture.");
-                    }
-                })
-                .catch(() => alert("An error occurred."));
+                    body:`pictureId=${id}`
+                }).then(r=>{if(r.ok) location.reload(); else alert("Failed")}).catch(()=>alert("Error"));
             });
+
+            // Delete logs/docs
+            $(".DeleteMLog").click(function(){
+                if(!confirm("Delete this maintenance log?")) return;
+                $.post("/MaintenanceLog/DeleteMaintenanceLog",{id: $(this).data("id")})
+                 .done(()=>location.reload())
+                 .fail(()=>alert("Failed"));
+            });
+            $(".DeleteDocument").click(function(){
+                if(!confirm("Delete this document?")) return;
+                $.post("/Document/DeleteDocument",{id: $(this).data("id")})
+                 .done(()=>location.reload())
+                 .fail(()=>alert("Failed"));
+            });
+
+            // Document modal
+            const docModal = document.getElementById("docModal");
+            docModal?.addEventListener("show.bs.modal",function(e){
+                this.querySelector("#modalDoc").src = e.relatedTarget.dataset.bsSrc;
+            });
+            docModal?.addEventListener("hidden.bs.modal",function(){
+                this.querySelector("#modalDoc").src = "";
+            });
+
+            // Tabs with hash
+            const vehicleTabs = document.querySelectorAll('#vehicleTabs button[data-bs-toggle="tab"]');
 
             function showTabFromHash() {
-                var hash = window.location.hash; // e.g., #Pictures
-                if (!hash) hash = "#Properties"; // default tab
-                $("#info a").removeClass("active");
-                $("#info a[href='" + hash + "']").addClass("active");
-                $("#content > div").addClass("visually-hidden");
-                $(hash).removeClass("visually-hidden");
+                let hash = window.location.hash.toLowerCase() || "#properties";
+                let tabButton = Array.from(vehicleTabs).find(btn => btn.getAttribute("data-bs-target") === hash);
+                if(tabButton) new bootstrap.Tab(tabButton).show();
             }
 
-            // Run on page load
             showTabFromHash();
 
-            // When a tab is clicked
-            $("#info a").on("click", function (e) {
-                e.preventDefault();
-                var hash = $(this).attr("href");
-                window.location.hash = hash; // update URL
-                showTabFromHash();
-            });
-
-            // Optional: handle back/forward browser buttons
-            $(window).on("hashchange", function() {
-                showTabFromHash();
-            });
-
-            var docModal = document.getElementById('docModal');
-            docModal.addEventListener('show.bs.modal', function (event) {
-                var btn = event.relatedTarget;
-                var src = btn.getAttribute('data-bs-src');
-                docModal.querySelector('#modalDoc').src = src;
-            });
-            docModal.addEventListener('hidden.bs.modal', function () {
-                docModal.querySelector('#modalDoc').src = '';
-            });
-
-            $(".DeleteMLog").on("click", function () {
-                if (!confirm("Delete this maintenance log?")) return;
-
-                const id = $(this).data("id");
-
-                $.post("/MaintenanceLog/DeleteMaintenanceLog", { id: id })
-                .done(function () {
-                    location.reload();
-                })
-                .fail(function () {
-                    alert("Delete failed");
+            vehicleTabs.forEach(btn => {
+                btn.addEventListener('shown.bs.tab', function(e){
+                    window.location.hash = e.target.getAttribute("data-bs-target");
                 });
             });
-            $(".DeleteDocument").on("click", function () {
-                if (!confirm("Delete this Document?")) return;
 
-                const id = $(this).data("id");
+            window.addEventListener('hashchange', showTabFromHash);
 
-                $.post("/Document/DeleteDocument", { id: id })
-                .done(function () {
-                    location.reload();
-                })
-                .fail(function () {
-                    alert("Delete failed");
-                });
-            });
         });
     </script>
 }
+
