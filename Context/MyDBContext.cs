@@ -111,8 +111,6 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.DriverName).HasMaxLength(100);
-            entity.Property(e => e.Purpose).HasMaxLength(255);
             entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
 
             entity.HasOne(d => d.Vehicle).WithMany(p => p.VehicleLogs)
