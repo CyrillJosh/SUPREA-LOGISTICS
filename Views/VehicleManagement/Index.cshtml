@@ -58,7 +58,7 @@
             <tbody>
                 @foreach (var v in Model)
                 {
-                    <tr>
+                    <tr id="@v.VehicleId">
                         <td>@(v.UnitType ?? "-")</td>
                         <td>@(v.OwnershipStatus ?? "-")</td>
                         <td>@(v.UnitModelSeries ?? "-")</td>
