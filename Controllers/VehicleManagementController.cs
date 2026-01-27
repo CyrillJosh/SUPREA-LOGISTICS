@@ -26,6 +26,7 @@ namespace SUPREA_LOGISTICS.Controllers
             var vehicles = _context.Vehicles
                 .Include(x => x.VehicleDocuments)
                 .Include(x => x.DriverInCharge)
+                .Include(x => x.VehicleLogs)
                 .Where(x => x.IsAvailable).ToList();
 
             return View(vehicles);
@@ -44,6 +45,7 @@ namespace SUPREA_LOGISTICS.Controllers
                 .Include(x => x.VehiclePictures)
                 .Include(x => x.DriverInCharge)
                 .Include(x => x.VehicleDocuments)
+                .Include(x => x.VehicleLogs)
                 .Include(x => x.MaintenanceLogs)
                 .FirstOrDefault(x => x.VehicleId == id);
             if (vehicle == null)

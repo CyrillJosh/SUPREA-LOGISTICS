@@ -10,56 +10,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" asp-append-version="true" />
 </head>
 <body class="vh-100 vw-100 m-0 overflow-hidden">
-    <header class="bg-primary text-white d-flex align-items-center px-3" style="height:70px;">
+    <header class="bg-darkblue text-white d-flex align-items-center px-3" style="height:100px;">
         <button class="btn btn-primary d-md-none me-3"
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#sidebarMenu">
             <i class="fa-solid fa-bars"></i>
         </button>
-        <h1 class="m-0">SUPREA LOGISTICS</h1>
+        <img src="~/images/Logo.png" height="70" class="me-2" style="filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));" />
+        <h1 class="m-0"><strong>SUPREA PHILS. DEV. CORP.</strong></h1>
     </header>
 
     <div class="container-fluid p-0">
-        <div class="row g-0" style="height: calc(100vh - 70px);">
+        <div class="row g-0" style="height: calc(100vh - 100px);">
 
             <!-- Sidebar (Desktop) -->
             <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column bg-light p-3 border-end">
-                <h3 class="mb-3 text-center text-primary">Menu</h3>
-                <a href="/" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
-                @* <a href="#"class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0"><i class="fa-solid fa-boxes-stacked me-2"></i>Logistics</a> *@
-                <div class="card p-2 d-flex border-0 sidekey">
+                <h3 class="mb-3 text-center text-black fw-bold">Menu</h3>
+                <a href="/" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0 text-black"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
+                <div class="card p-2 d-flex border-0">
 
-                    <div class="d-flex flex-row align-items-center text-primary justify-content-start">
+                    <div class="d-flex flex-row align-items-center text-black justify-content-start mb-2">
                         <i class="fa-solid fa-truck me-2"></i>
-                        <p class="m-0">Vehicle Management</p>
+                        <h5 class="m-0 text-black">Vehicle Management</h5>
                     </div>
 
                     <div class="d-flex flex-column gap-0 sidekey-links">
-                        <a asp-controller="VehicleManagement" asp-action="Index" class="sidekey-link p-0 ps-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <i class="fa-solid fa-list me-1"></i>
+                        <a asp-controller="VehicleManagement" asp-action="Index" class="p-0 ps-3 mb-1">
+                            <div class="d-flex flex-row align-items-center h6 h-100 text-black">
+                                <i class="fa-solid fa-list me-2"></i>
                                 Vehicle List
                             </div>
                         </a>
 
-                        <a asp-action="Index" asp-controller="MaintenanceLog" class="sidekey-link p-0 ps-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <i class="fa-solid fa-screwdriver-wrench me-1"></i>
+                        <a asp-action="Index" asp-controller="MaintenanceLog" class="p-0 ps-3 mb-1">
+                            <div class="d-flex flex-row align-items-center h6 h-100 text-black">
+                                <i class="fa-solid fa-screwdriver-wrench me-2"></i>
                                 Maintenance Logs
                             </div>
                         </a>
 
-                        <a asp-action="Index" asp-controller="VehicleLog" class="sidekey-link p-0 ps-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <i class="fa-solid fa-clipboard-list me-1"></i>
+                        <a asp-action="Index" asp-controller="VehicleLog" class="p-0 ps-3 mb-1">
+                            <div class="d-flex flex-row align-items-center h6 h-100 text-black">
+                                <i class="fa-solid fa-clipboard-list me-2"></i>
                                 Vehicle Logs
                             </div>
                         </a>
 
-                        <a asp-action="CreateVehicle" asp-controller="VehicleManagement" class="sidekey-link p-0 ps-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <i class="fa-solid fa-plus me-1"></i>
+                        <a asp-action="CreateVehicle" asp-controller="VehicleManagement" class="p-0 ps-3 mb-1">
+                            <div class="d-flex flex-row align-items-center h6 h-100 text-black">
+                                <i class="fa-solid fa-plus me-2"></i>
                                 New Vehicle
                             </div>
                         </a>
