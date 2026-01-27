@@ -15,7 +15,7 @@ namespace SUPREA_LOGISTICS.Controllers
         //Vehicle Logs
         //Tobe added database
         [HttpGet]
-        public async Task<IActionResult> VehicleLog()
+        public async Task<IActionResult> Index()
         {
             return View();
         }

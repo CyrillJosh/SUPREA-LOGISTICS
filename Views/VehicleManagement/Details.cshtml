@@ -207,7 +207,7 @@
                             <td>@log.Description</td>
                             <td>@log.ServiceProvider</td>
                             <td>@log.Cost</td>
-                            <td>@(log.DateCompleted.ToString("MM/dd/yyyy")??"-")</td>
+                            <td>@(log.DateCompleted.ToString()??"-")</td>
                             <td>@log.Remarks</td>
                             <td>
                                 <a asp-action="EditMaintenanceLog" asp-controller="MaintenanceLog" asp-route-id="@log.MaintenanceId"><i class="fa fa-pen"></i></a>
@@ -232,7 +232,11 @@
         </div>
         <table class="table table-bordered">
             <thead>
-                <tr><th>ID</th><th>Date</th><th>Driver</th><th>Purpose</th><th>Remarks</th></tr>
+                <tr>
+                    <th>Date Created</th>
+                    <th>Description</th>
+                    <th>Remarks</th>
+                </tr>
             </thead>
             <tbody>
                 @if (Model.VehicleLogs.Any())
@@ -240,11 +244,9 @@
                     foreach (var log in Model.VehicleLogs)
                     {
                         <tr>
-                            <td>@log.LogId</td>
-                            @* <td>@(log.LogDate.ToString("yyyy-MM-dd")??"-")</td>
-                            <td>@log.DriverName</td>
-                            <td>@log.Purpose</td> *@
-                            <td>@* @log.Remarks *@</td>
+                            <td>@log.CreatedAt</td>
+                            <td>@log.Description</td>
+                            <td>@log.Remarks</td>
                         </tr>
                     }
                 }

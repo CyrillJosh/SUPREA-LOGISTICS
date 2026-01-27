@@ -53,7 +53,7 @@
                         <td>@(log.Description ?? "-")</td>
                         <td>@(log.ServiceProvider ?? "-")</td>
                         <td>@(log.Cost.HasValue? log.Cost.Value.ToString("N2") : "-")</td>
-                        <td>@(log.DateCompleted.ToString("yyyy-MM-dd") ?? "-")</td>
+                        <td>@(log.DateCompleted.ToString()?? "-")</td>
                         <td>@(log.Remarks ?? "-")</td>
                         <td class="align-middle">
                             <div class="d-flex gap-1">

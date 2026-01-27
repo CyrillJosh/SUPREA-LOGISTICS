@@ -45,7 +45,13 @@ namespace SUPREA_LOGISTICS.Controllers
         public async Task<IActionResult> CreateMaintenanceLog(MaintenanceLog log)
         {
             if (!ModelState.IsValid)
+            {
+                ViewBag.Vehicles = _context.Vehicles
+                .Where(v => v.IsAvailable)
+                .OrderBy(v => v.VehicleId)
+                .ToList();
                 return View(log);
+            }
 
             log.CreatedAt = DateTime.Now;
 
