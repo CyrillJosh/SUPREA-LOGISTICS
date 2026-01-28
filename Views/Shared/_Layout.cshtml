@@ -9,25 +9,54 @@
     <link rel="stylesheet" href="~/css/fontawesome.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" asp-append-version="true" />
 </head>
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool isLoginPage = currentController == "User" && currentAction == "Login";
+}
+
 <body class="vh-100 vw-100 m-0 overflow-hidden">
-    <header class="bg-darkblue text-white d-flex align-items-center px-3" style="height:100px;">
-        <button class="btn btn-primary d-md-none me-3"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#sidebarMenu">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <img src="~/images/Logo.png" height="70" class="me-2" style="filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));" />
-        <h1 class="m-0"><strong>SUPREA PHILS. DEV. CORP.</strong></h1>
-    </header>
+    @if (!isLoginPage)
+    {
+        <header class="bg-darkblue text-white d-flex align-items-center justify-content-between px-3" style="height:100px;">
+            <div class="d-flex flex-row align-items-center">
+                <button class="btn btn-primary d-md-none me-3"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarMenu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <img src="~/images/Logo.png" height="70" class="me-2" style="filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));" />
+                <h1 class="m-0"><strong>SUPREA PHILS. DEV. CORP.</strong></h1>
+            </div>
+            <div>
+                @{
+                    var role = Context.Session.GetString("Role");
+                    var userId = Context.Session.GetString("UserId") ?? "";
+                }
+                @if (string.IsNullOrEmpty(role) || string.IsNullOrEmpty(userId))
+                {
+                    <a asp-action="Login" asp-controller="User" class="text-decoration-none h5 text-white">Login</a>
+                }
+                else
+                {
+                    <a asp-action="Logout" asp-controller="User" class="text-decoration-none h5 text-white">Logout</a>
+                }
+            </div>
+        </header>
+    }
+
 
     <div class="container-fluid p-0">
-        <div class="row g-0" style="height: calc(100vh - 100px);">
+        <div class="@(!isLoginPage ? "row g-0": "")" style="@(isLoginPage ? "height: 100vh; width: 100vw;" : "calc(100vh - 100px)")">
 
+            @if (!isLoginPage)
+            {
             <!-- Sidebar (Desktop) -->
             <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column bg-light p-3 border-end">
                 <h3 class="mb-3 text-center text-black fw-bold">Menu</h3>
-                <a href="/" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0 text-black"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
+                <a asp-action="Index" asp-controller="Home" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0 text-black"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
                 <div class="card p-2 d-flex border-0">
 
                     <div class="d-flex flex-row align-items-center text-black justify-content-start mb-2">
@@ -75,14 +104,15 @@
                 </div>
 
             </nav>
+            }
 
             <!-- Main Content -->
-            <main class="col-md-9 col-lg-10 p-4 overflow-auto h-100">
+            <main class="col-md-9 col-lg-10 overflow-auto @(!isLoginPage ? "p-4" : "p-0 w-100")" style="@(!isLoginPage? "height: calc(100vh - 100px)":"100%")">
                 @RenderBody()
             </main>
 
         </div>
-    </div>
+    </div>s
 
     <!-- Mobile Sidebar -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">

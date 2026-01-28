@@ -18,6 +18,7 @@ public partial class MyDBContext : DbContext
     public virtual DbSet<Driver> Drivers { get; set; }
 
     public virtual DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Vehicle> Vehicles { get; set; }
 

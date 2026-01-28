@@ -12,14 +12,6 @@
 <!-- Executive Summary Cards -->
 <div class="row g-3 mb-4">
     <div class="col-md-4">
-        <div class="card text-white bg-primary shadow-sm h-100">
-            <div class="card-body text-center">
-                <h5 class="card-title">Total Vehicles</h5>
-                <h2>@Model.Count()</h2>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
         <div class="card text-white bg-success shadow-sm h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Available Vehicles</h5>
@@ -32,6 +24,14 @@
             <div class="card-body text-center">
                 <h5 class="card-title">Unavailable Vehicles</h5>
                 <h2>@Model.Count(v => v.VehicleStatus == "Unavailable")</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-primary shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Vehicles</h5>
+                <h2>@Model.Count()</h2>
             </div>
         </div>
     </div>

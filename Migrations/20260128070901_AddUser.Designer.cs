@@ -12,8 +12,8 @@ using SUPREA_LOGISTICS.Context;
 namespace SUPREA_LOGISTICS.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20260127052325_ChangeVehicleLog")]
-    partial class ChangeVehicleLog
+    [Migration("20260128070901_AddUser")]
+    partial class AddUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,7 +68,7 @@ namespace SUPREA_LOGISTICS.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateOnly>("DateCompleted")
+                    b.Property<DateOnly?>("DateCompleted")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
@@ -97,6 +97,34 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("MaintenanceLogs");
+                });
+
+            modelBuilder.Entity("SUPREA_LOGISTICS.Models.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SUPREA_LOGISTICS.Models.Vehicle", b =>

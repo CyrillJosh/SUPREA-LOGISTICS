@@ -117,7 +117,7 @@
             $('tbody tr').on("click", function (e) {
                 if (!$(e.target).closest('button, a').length) {
                     const id = $(this).find('td:first').closest('tr').attr('id');
-                    window.location.href = `/VehicleManagement/Details/${id}`;
+                    window.location.href = `/VehicleManagement/Details?id=${id}`;
                 }
             });
 

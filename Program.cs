@@ -18,6 +18,15 @@ namespace SUPREA_LOGISTICS
                     .EnableSensitiveDataLogging(),
                 ServiceLifetime.Transient
             );
+
+            //Session service
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(5);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -31,13 +40,19 @@ namespace SUPREA_LOGISTICS
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            //Session
+            app.UseSession();
+
             app.UseRouting();
 
             app.UseAuthorization();
 
+            //app.MapControllerRoute(
+            //    name: "default",
+            //    pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=User}/{action=Login}/");
 
             app.Run();
         }
