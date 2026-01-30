@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
+
 }
 @model IEnumerable<Vehicle>
 
@@ -8,26 +9,47 @@
     <h1 class="text-primary">Fleet Dashboard</h1>
     <p class="text-muted">Overview of vehicles and status</p>
 </div>
+@{
+    var lateststatuses = Model.SelectMany(v => v.VehicleStatuses)
+        .GroupBy(s => s.VehicleId)
+        .Select(g => g.OrderByDescending(s => s.StatusDate).FirstOrDefault())
+		.ToList();
 
+    var availableToday = lateststatuses
+        .Count(x => x.Status == "Available" && x.StatusDate.Date == DateTime.Today);
+    var unavailableToday = lateststatuses
+        .Count(x => x.Status == "Unavailable" && x.StatusDate.Date == DateTime.Today);
+    var damagedToday = lateststatuses
+        .Count(x => x.Status == "Damaged" && x.StatusDate.Date == DateTime.Today);
+
+}
 <!-- Executive Summary Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-white bg-success shadow-sm h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Available Vehicles</h5>
-                <h2>@Model.Count(v => v.VehicleStatus == "Available")</h2>
+                <h2>@availableToday</h2>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card text-white bg-danger shadow-sm h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Unavailable Vehicles</h5>
-                <h2>@Model.Count(v => v.VehicleStatus == "Unavailable")</h2>
+                <h2>@unavailableToday</h2>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-warning shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Damaged Vehicles</h5>
+                <h2>@damagedToday</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card text-white bg-primary shadow-sm h-100">
             <div class="card-body text-center">
                 <h5 class="card-title">Total Vehicles</h5>
@@ -81,12 +103,16 @@
             <tbody>
                 @foreach (var v in Model)
                 {
+                    var latestStatus = v.VehicleStatuses
+                        .OrderByDescending(s => s.StatusDate)
+                        .FirstOrDefault();
+
                     <tr>
                         <td>@v.UnitModelSeries - @v.BrandMake</td>
                         <td>@(v.DriverInCharge?.FullName ?? "-")</td>
                         <td>
-                            <span class="badge @(v.VehicleStatus == "Available" ? "bg-success" : "bg-danger")">
-                                @(v.VehicleStatus ?? "-")
+                            <span class="badge @(latestStatus?.Status == "Available" ? "bg-success" : latestStatus?.Status == "Unavailable" ? "bg-danger" : latestStatus?.Status == "Damaged" ? "bg-warning" : "text-dark")">
+                                @(latestStatus?.Status ?? "Untagged")
                             </span>
                         </td>
                     </tr>

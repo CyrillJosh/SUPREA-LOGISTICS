@@ -5,6 +5,7 @@ using SUPREA_LOGISTICS.Context;
 using SUPREA_LOGISTICS.Models;
 using SUPREA_LOGISTICS.ViewModels;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SUPREA_LOGISTICS.Controllers
 {
@@ -27,6 +28,7 @@ namespace SUPREA_LOGISTICS.Controllers
                 .Include(x => x.VehicleDocuments)
                 .Include(x => x.DriverInCharge)
                 .Include(x => x.VehicleLogs)
+                .Include(x => x.VehicleStatuses)
                 .Where(x => x.IsAvailable).ToList();
 
             return View(vehicles);
@@ -45,6 +47,7 @@ namespace SUPREA_LOGISTICS.Controllers
                 .Include(x => x.VehiclePictures)
                 .Include(x => x.DriverInCharge)
                 .Include(x => x.VehicleDocuments)
+                .Include(x => x.VehicleStatuses)
                 .Include(x => x.VehicleLogs)
                 .Include(x => x.MaintenanceLogs)
                 .FirstOrDefault(x => x.VehicleId == id);
@@ -244,7 +247,7 @@ namespace SUPREA_LOGISTICS.Controllers
         #region EXPORT METHOD
         public IActionResult Export()
         {
-            var vehicles = _context.Vehicles.Where(x => x.IsAvailable).ToList(); // get data from DB
+            var vehicles = _context.Vehicles.Include(x => x.VehicleStatuses).Where(x => x.IsAvailable).ToList(); // get data from DB
             var sb = new StringBuilder();
 
             // Header
@@ -253,12 +256,47 @@ namespace SUPREA_LOGISTICS.Controllers
             // Rows
             foreach (var v in vehicles)
             {
-                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.UnitModelSeries},{v.BrandMake},{v.YearModel},{v.EngineNo},{v.ChassisNo},{v.PlateNo},{v.Orcr},{v.ExpirationDate},{v.Insurance},{v.InsuranceCoverage},{v.InsuranceProvider},{v.DateAcquired},{v.Supplier},{v.ProjectId},{v.SiteLocation},{v.VehicleStatus}");
+                sb.AppendLine($"{v.VehicleId},{v.UnitType},{v.UnitModelSeries},{v.BrandMake},{v.YearModel},{v.EngineNo},{v.ChassisNo},{v.PlateNo},{v.Orcr},{v.ExpirationDate},{v.Insurance},{v.InsuranceCoverage},{v.InsuranceProvider},{v.DateAcquired},{v.Supplier},{v.ProjectId},{v.SiteLocation},{v.VehicleStatuses.Last().Status}");
             }
 
             return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "vehicles.csv");
         }
 
         #endregion
+
+        [HttpGet]
+        public async Task<IActionResult> VehicleStatus(int id)
+        {
+            var vehicles = _context.Vehicles
+                .Include(x => x.VehicleStatuses)
+                .Where(x => x.IsAvailable).ToList();
+
+            return View(vehicles);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpsertStatus(int vehicleId, DateTime date, string status)
+        {
+            var existing = await _context.VehicleStatuses
+                .FirstOrDefaultAsync(x => x.VehicleId == vehicleId && x.StatusDate.Date == date);
+
+            if (existing == null)
+            {
+                _context.VehicleStatuses.Add(new VehicleStatus
+                {
+                    VehicleId = vehicleId,
+                    StatusDate = date,
+                    Status = status
+                });
+            }
+            else
+            {
+                existing.Status = status;
+                _context.VehicleStatuses.Update(existing);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

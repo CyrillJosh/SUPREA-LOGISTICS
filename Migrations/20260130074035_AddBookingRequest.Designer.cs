@@ -12,8 +12,8 @@ using SUPREA_LOGISTICS.Context;
 namespace SUPREA_LOGISTICS.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20260128070901_AddUser")]
-    partial class AddUser
+    [Migration("20260130074035_AddBookingRequest")]
+    partial class AddBookingRequest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,46 @@ namespace SUPREA_LOGISTICS.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SUPREA_LOGISTICS.Models.BookingRequest", b =>
+                {
+                    b.Property<int>("BookingRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingRequestId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateNeeded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DocumentContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("DocumentFileData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("DocumentFileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NatureOfRequest")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BookingRequestId");
+
+                    b.ToTable("BookingRequests");
+                });
 
             modelBuilder.Entity("SUPREA_LOGISTICS.Models.Driver", b =>
                 {
@@ -206,17 +246,15 @@ namespace SUPREA_LOGISTICS.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("VehicleStatus")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int?>("YearModel")
                         .HasColumnType("int");
 
                     b.HasKey("VehicleId")
                         .HasName("PK__Vehicles__476B54B21A713B5D");
 
-                    b.HasIndex("DriverInChargeId");
+                    b.HasIndex("DriverInChargeId")
+                        .IsUnique()
+                        .HasFilter("[DriverInChargeId] IS NOT NULL");
 
                     b.ToTable("Vehicles");
                 });
@@ -355,6 +393,31 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.ToTable("VehiclePictures");
                 });
 
+            modelBuilder.Entity("SUPREA_LOGISTICS.Models.VehicleStatus", b =>
+                {
+                    b.Property<int>("VehicleStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleStatusId"));
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StatusDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("VehicleStatusId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("VehicleStatuses");
+                });
+
             modelBuilder.Entity("SUPREA_LOGISTICS.Models.MaintenanceLog", b =>
                 {
                     b.HasOne("SUPREA_LOGISTICS.Models.Vehicle", "Vehicle")
@@ -370,8 +433,8 @@ namespace SUPREA_LOGISTICS.Migrations
             modelBuilder.Entity("SUPREA_LOGISTICS.Models.Vehicle", b =>
                 {
                     b.HasOne("SUPREA_LOGISTICS.Models.Driver", "DriverInCharge")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("DriverInChargeId")
+                        .WithOne("Vehicle")
+                        .HasForeignKey("SUPREA_LOGISTICS.Models.Vehicle", "DriverInChargeId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("DriverInCharge");
@@ -413,9 +476,21 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("SUPREA_LOGISTICS.Models.VehicleStatus", b =>
+                {
+                    b.HasOne("SUPREA_LOGISTICS.Models.Vehicle", "Vehicle")
+                        .WithMany("VehicleStatuses")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("SUPREA_LOGISTICS.Models.Driver", b =>
                 {
-                    b.Navigation("Vehicles");
+                    b.Navigation("Vehicle")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SUPREA_LOGISTICS.Models.Vehicle", b =>
@@ -427,6 +502,8 @@ namespace SUPREA_LOGISTICS.Migrations
                     b.Navigation("VehicleLogs");
 
                     b.Navigation("VehiclePictures");
+
+                    b.Navigation("VehicleStatuses");
                 });
 #pragma warning restore 612, 618
         }

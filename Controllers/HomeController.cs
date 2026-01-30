@@ -19,7 +19,10 @@ namespace SUPREA_LOGISTICS.Controllers
 
         public IActionResult Index()
         {
-            var vehicles = _context.Vehicles.Include(x => x.DriverInCharge).ToList();
+            var vehicles = _context.Vehicles
+                .Include(x => x.DriverInCharge)
+                .Include(x => x.VehicleStatuses)
+                .ToList();
             return View(vehicles);
         }
 

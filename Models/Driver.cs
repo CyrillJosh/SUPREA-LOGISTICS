@@ -7,6 +7,6 @@
         public string? Classification { get; set; }      
         public string? Position { get; set; }            
         public bool IsActive { get; set; } = true;
-        public virtual ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public virtual Vehicle Vehicle { get; set; } = null!;
     }
 }

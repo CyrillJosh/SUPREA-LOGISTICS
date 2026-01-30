@@ -43,11 +43,11 @@ public partial class Vehicle
 
     public string? SiteLocation { get; set; }
 
-    public string? VehicleStatus { get; set; }
-
     public bool IsAvailable { get; set; }
     public int? DriverInChargeId { get; set; }
     public virtual Driver? DriverInCharge { get; set; }
+
+    public virtual ICollection<VehicleStatus> VehicleStatuses { get; set; } = new List<VehicleStatus>();
 
     public virtual ICollection<MaintenanceLog> MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
 

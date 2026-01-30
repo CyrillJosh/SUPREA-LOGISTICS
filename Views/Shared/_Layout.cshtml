@@ -57,7 +57,10 @@
             <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column bg-light p-3 border-end">
                 <h3 class="mb-3 text-center text-black fw-bold">Menu</h3>
                 <a asp-action="Index" asp-controller="Home" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0 text-black"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a>
-                <div class="card p-2 d-flex border-0">
+                <a asp-action="Create" asp-controller="Booking" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0 text-black"><i class="fa-solid fa-book me-2"></i>Book</a>
+                @* <a asp-action="Index" asp-controller="Home" class="mb-2 text-decoration-none card p-2 d-flex flex-row align-items-center border-0 text-black"><i class="fa-solid fa-chart-line me-2"></i>Dashboard</a> *@
+
+                <div class="card p-2 d-flex border-0 mb-2">
 
                     <div class="d-flex flex-row align-items-center text-black justify-content-start mb-2">
                         <i class="fa-solid fa-truck me-2"></i>
@@ -89,16 +92,16 @@
                         <a asp-action="CreateVehicle" asp-controller="VehicleManagement" class="p-0 ps-3 mb-1">
                             <div class="d-flex flex-row align-items-center h6 h-100 text-black">
                                 <i class="fa-solid fa-plus me-2"></i>
-                                New Vehicle
+                                Create Vehicle
                             </div>
                         </a>
 
-                        @* <a href="#NewLog" class="sidekey-link p-0 ps-2">
-                            <div class="d-flex flex-row align-items-center">
-                                <i class="fa-solid fa-plus me-1"></i>
-                                New Log
+                        <a asp-action="VehicleStatus" asp-controller="VehicleManagement" class="p-0 ps-3 mb-1">
+                            <div class="d-flex flex-row align-items-center h6 h-100 text-black">
+                                <i class="fa-solid fa-clipboard-check me-1"></i>
+                                Vehicle Status
                             </div>
-                        </a> *@
+                        </a>
                     </div>
 
                 </div>

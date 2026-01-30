@@ -1,0 +1,165 @@
+﻿@model SUPREA_LOGISTICS.ViewModels.BookingViewModel
+@{
+    ViewData["Title"] = "New Booking Request";
+}
+
+<div class="container">
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success rounded-4 shadow-sm">
+            <i class="fa-solid fa-circle-check me-2"></i>
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="bg-primary text-white p-3 rounded-4 shadow-sm">
+            <i class="fa-solid fa-truck fa-lg"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold text-primary m-0">Logistics Booking System</h2>
+            <small class="text-muted">Submit a new booking request for truck and fleet management</small>
+        </div>
+    </div>
+
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-header bg-white border-bottom rounded-top-4 p-4">
+            <h4 class="fw-bold text-dark m-0">New Booking Request</h4>
+            <small class="text-muted">Complete all fields below to submit your booking request</small>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data" class="row g-4">
+                @Html.AntiForgeryToken()
+
+                <!-- 1 Region -->
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-dark">
+                        <span class="badge bg-primary me-2">1</span>
+                        <i class="fa-solid fa-location-dot me-1 text-muted"></i>
+                        Region <span class="text-danger">*</span>
+                    </label>
+
+                    <select asp-for="Region" class="form-select rounded-4" id="RegionSelect">
+                        <option value="">Select region</option>
+                        <option value="north">North Region</option>
+                        <option value="south">South Region</option>
+                        <option value="east">East Region</option>
+                        <option value="west">West Region</option>
+                        <option value="central">Central Region</option>
+                        <option value="other">Other</option>  @* ✅ added *@
+                    </select>
+
+                    <div class="mt-2 ms-5 d-none" id="RegionOtherDiv">
+                        <input asp-for="RegionOther" class="form-control rounded-4"
+                               placeholder="Please specify other region..." />
+                    </div>
+
+                </div>
+
+                <!-- 2 Nature -->
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-dark">
+                        <span class="badge bg-primary me-2">2</span>
+                        <i class="fa-solid fa-file-lines me-1 text-muted"></i>
+                        Nature of Request <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text" placeholder="Enter the nature of the request" asp-for="NatureOfRequest" class="form-select rounded-4">
+                    <span asp-validation-for="NatureOfRequest" class="text-danger small"></span>
+                </div>
+
+                <!-- 3 Document -->
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-dark">
+                        <span class="badge bg-primary me-2">3</span>
+                        <i class="fa-solid fa-paperclip me-1 text-muted"></i>
+                        Attach Document
+                    </label>
+
+                    <small class="d-block text-muted mb-2 ms-5">
+                        Upload PO, Invoice, or supporting documents
+                    </small>
+
+                    <div class="ms-5">
+                        <input asp-for="Document" type="file" class="form-control rounded-4" />
+                        <span asp-validation-for="Document" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- 4 Date Needed -->
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-dark">
+                        <span class="badge bg-primary me-2">4</span>
+                        <i class="fa-solid fa-calendar-days me-1 text-muted"></i>
+                        Date Needed <span class="text-danger">*</span>
+                    </label>
+
+                    <input asp-for="DateNeeded" type="date" class="form-control rounded-4" />
+                    <span asp-validation-for="DateNeeded" class="text-danger small"></span>
+                </div>
+
+                <!-- 5 Requested By -->
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-dark">
+                        <span class="badge bg-primary me-2">5</span>
+                        <i class="fa-solid fa-user me-1 text-muted"></i>
+                        Requested By <span class="text-danger">*</span>
+                    </label>
+
+                    <input asp-for="RequestedBy"
+                           class="form-control rounded-4"
+                           placeholder="Enter name of Person in Charge or Site Engineer" />
+
+                    <span asp-validation-for="RequestedBy" class="text-danger small"></span>
+                </div>
+
+                <!-- Submit -->
+                <div class="col-12 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary w-100 rounded-4 py-3 fw-bold">
+                        <i class="fa-solid fa-truck me-2"></i>
+                        Submit Booking Request
+                    </button>
+
+                    <p class="text-center text-muted small mt-3 mb-0">
+                        Fields marked with <span class="text-danger">*</span> are required
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @* <div class="card mt-4 border-0 shadow-sm rounded-4 bg-info bg-opacity-10">
+        <div class="card-body">
+            <small class="text-dark">
+                <strong>Need help?</strong> Contact the logistics team at logistics@company.com or call ext. 2500
+            </small>
+        </div>
+    </div> *@
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function toggleOther() {
+            const region = $("#RegionSelect").val();
+            const nature = $("#NatureSelect").val();
+
+            if (region === "other") {
+                $("#RegionOtherDiv").removeClass("d-none");
+            } else {
+                $("#RegionOtherDiv").addClass("d-none");
+                $("#RegionOtherDiv input").val("");
+            }
+        }
+
+        $(document).ready(function () {
+            toggleOther();
+            $("#RegionSelect, #NatureSelect").on("change", toggleOther);
+        });
+    </script>
+}
+

@@ -15,6 +15,7 @@ public partial class MyDBContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<BookingRequest> BookingRequests { get; set; }
     public virtual DbSet<Driver> Drivers { get; set; }
 
     public virtual DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
@@ -28,6 +29,8 @@ public partial class MyDBContext : DbContext
 
     public virtual DbSet<VehiclePicture> VehiclePictures { get; set; }
 
+    public virtual DbSet<VehicleStatus> VehicleStatuses { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=LAPTOP-K56S2BSD\\SQLEXPRESS;Initial Catalog=SupreaLogistics;Integrated Security=True;Trust Server Certificate=True;");
@@ -36,8 +39,8 @@ public partial class MyDBContext : DbContext
     {
         modelBuilder.Entity<Vehicle>()
             .HasOne(v => v.DriverInCharge)
-            .WithMany(d => d.Vehicles)
-            .HasForeignKey(v => v.DriverInChargeId)
+            .WithOne(d => d.Vehicle)
+            .HasForeignKey<Vehicle>(v => v.DriverInChargeId)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<MaintenanceLog>(entity =>
@@ -81,7 +84,6 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.Supplier).HasMaxLength(200);
             entity.Property(e => e.UnitModelSeries).HasMaxLength(100);
             entity.Property(e => e.UnitType).HasMaxLength(100);
-            entity.Property(e => e.VehicleStatus).HasMaxLength(50);
         });
 
         modelBuilder.Entity<VehicleDocument>(entity =>

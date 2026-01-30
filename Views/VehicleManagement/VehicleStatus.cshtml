@@ -1,0 +1,147 @@
+﻿@{
+    ViewData["Title"] = "Vehicle Status Management";
+
+    var year = DateTime.Now.Year;
+    var month = DateTime.Now.Month;
+    var daysInMonth = DateTime.DaysInMonth(year, month);
+    var monthName = new DateTime(year, month, 1).ToString("MMMM yyyy");
+}
+
+@model IEnumerable<Vehicle>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold text-primary m-0">Vehicle Status Daily Tracker</h2>
+
+   <div class="d-flex flex-row gap-2">
+       <table>
+           <tr>
+                <td class="border-start-0 border-top-0 border-bottom-0 border-2 pe-1"><strong>Legend:</strong</td>
+                <td class="align-middle ps-1"><p class="m-0 p-0">Available :</p></td>
+                <td class="border-start-0 border-top-0 border-bottom-0 border-2 pe-1"><div class="rounded-circle border border-2 mx-auto bg-success" style="height:20px;width:20px"></div></td>
+                <td class="align-middle ps-1"><p class="m-0 p-0">Unavailable :</p></td>
+                <td class="border-start-0 border-top-0 border-bottom-0 border-2 pe-1"><div class="rounded-circle border border-2 mx-auto bg-danger" style="height:20px;width:20px"></div></td>
+                <td class="align-middle ps-1"><p class="m-0 p-0">Damaged :</p></td>
+                <td><div class="rounded-circle border border-2 mx-auto bg-warning" style="height:20px;width:20px"></div></td>
+           </tr>
+       </table>
+   </div>
+</div>
+
+<div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center mb-0">
+            <thead class="table-info">
+                <tr><th rowspan="2">Vehicle</th><th colspan="100">@monthName</th></tr>
+                <tr>
+                    @foreach(var day in Enumerable.Range(1, daysInMonth))
+                    {
+                        <th>@day</th>
+					}
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vehicle in Model)
+                {
+                    <tr>
+                        <!-- Vehicle Name / Plate -->
+                        <td class="fw-semibold text-start align-middle">
+                            <div class="d-flex flex-row gap-2">
+                                @* <span class="text-dark">@vehicle.VehicleId</span> *@
+                                <small class="text-muted">@vehicle.PlateNo</small>
+                            </div>
+                        </td>
+
+                        @foreach (var day in Enumerable.Range(1, daysInMonth))
+                        {
+                            var date = new DateTime(year, month, day);
+                            var isToday = date.Date == DateTime.Today;
+
+                            var status = vehicle.VehicleStatuses?
+                            .FirstOrDefault(s => s.StatusDate.Date == date.Date);
+
+                            <td class="align-middle">
+                                @if (isToday)
+                                {
+                                    <select class="form-select form-select-sm statusDropdown @(status?.Status == "Available" ? "bg-success" : status?.Status == "Unavailable" ? "bg-danger" : status?.Status == "Damaged"?"bg-warning":"")"
+                                            data-vehicleid="@vehicle.VehicleId"
+                                            data-date="@date.ToString("yyyy-MM-dd")">
+
+                                        <option value="" selected="@(status == null)">--</option>
+                                        <option class="bg-success" value="Available" selected="@(status?.Status == "Available")">Available</option>
+                                        <option class="bg-danger" value="Unavailable" selected="@(status?.Status == "Unavailable")">Unavailable</option>
+                                        <option class="bg-warning" value="Damaged" selected="@(status?.Status == "Damaged")">Damaged</option>
+
+                                    </select>
+                                }
+                                else
+                                {
+                                    @if (status == null)
+                                    {
+                                        <div class="rounded-circle border border-2 mx-auto" style="height:20px;width:20px"></div>
+                                    }
+                                    else if (status.Status == "Available")
+                                    {
+                                        <div class="rounded-circle border border-2 mx-auto bg-success" style="height:20px;width:20px"></div>
+                                    }
+                                    else if (status.Status == "Unavailable")
+                                    {
+                                        <div class="rounded-circle border border-2 mx-auto bg-danger" style="height:20px;width:20px"></div>
+                                    }
+                                    else if (status.Status == "Damaged")
+                                    {
+                                        <div class="rounded-circle border border-2 mx-auto bg-warning" style="height:20px;width:20px"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle border border-2 mx-auto bg-secondary" style="height:20px;width:20px"></div>
+                                    }
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).on("focus", ".statusDropdown", function () {
+            $(this).data("prev", $(this).val());
+        });
+        $(document).on("change", ".statusDropdown", function () {
+            const $dropdown = $(this);
+            const vehicleId = $dropdown.data("vehicleid");
+            const date = $dropdown.data("date");
+            const status = $dropdown.val();
+            const prevStatus = $dropdown.data("prev"); // previous value
+
+            $.ajax({
+                url: '/VehicleManagement/UpsertStatus',
+                type: 'POST',
+                data: {
+                    vehicleId: vehicleId,
+                    date: date,
+                    status: status,
+                },
+                success: function () {
+                    $dropdown.removeClass('bg-success bg-danger bg-warning');
+
+                    let bgClass = '';
+                    if (status === 'Available') bgClass = 'bg-success';
+                    else if (status === 'Unavailable') bgClass = 'bg-danger';
+                    else if (status === 'Damaged') bgClass = 'bg-warning';
+
+                    $dropdown.addClass(bgClass);
+
+                    $dropdown.data("prev", status);
+                },
+                error: function () {
+                    alert('Failed to update status');
+
+                    $dropdown.val(prevStatus);
+                }
+            });
+        });
+    </script>
+}
